@@ -1,0 +1,43 @@
+﻿@page
+@model VitrineExpress.Pages.ItensPedido.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>ItemPedido</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ItemPedido.Quantidade)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ItemPedido.Quantidade)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ItemPedido.PrecoUnitario)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ItemPedido.PrecoUnitario)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ItemPedido.Pedido)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ItemPedido.Pedido.Id)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ItemPedido.Produto)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ItemPedido.Produto.Id)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.ItemPedido.Id">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>

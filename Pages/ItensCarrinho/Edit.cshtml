@@ -1,0 +1,50 @@
+﻿@page
+@model VitrineExpress.Pages.ItensCarrinho.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>ItemCarrinho</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ItemCarrinho.Id" />
+            <div class="form-group">
+                <label asp-for="ItemCarrinho.Quantidade" class="control-label"></label>
+                <input asp-for="ItemCarrinho.Quantidade" class="form-control" />
+                <span asp-validation-for="ItemCarrinho.Quantidade" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ItemCarrinho.PrecoUnitario" class="control-label"></label>
+                <input asp-for="ItemCarrinho.PrecoUnitario" class="form-control" />
+                <span asp-validation-for="ItemCarrinho.PrecoUnitario" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ItemCarrinho.CarrinhoId" class="control-label"></label>
+                <select asp-for="ItemCarrinho.CarrinhoId" class="form-control" asp-items="ViewBag.CarrinhoId"></select>
+                <span asp-validation-for="ItemCarrinho.CarrinhoId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ItemCarrinho.ProdutoId" class="control-label"></label>
+                <select asp-for="ItemCarrinho.ProdutoId" class="form-control" asp-items="ViewBag.ProdutoId"></select>
+                <span asp-validation-for="ItemCarrinho.ProdutoId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

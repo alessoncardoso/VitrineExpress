@@ -1,0 +1,96 @@
+﻿@page
+@model VitrineExpress.Pages.Lojas.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Loja[0].Cnpj)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Loja[0].Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Loja[0].ImagemUrl)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Loja[0].Descricao)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Loja[0].Telefone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Loja[0].TaxaEntrega)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Loja[0].ValorMinimoPedido)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Loja[0].RetiradaDisponivel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Loja[0].EntregaDisponivel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Loja[0].Lojista)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Loja[0].StatusAtual)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Loja) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cnpj)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ImagemUrl)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Descricao)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Telefone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TaxaEntrega)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ValorMinimoPedido)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RetiradaDisponivel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EntregaDisponivel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Lojista.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StatusAtual)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

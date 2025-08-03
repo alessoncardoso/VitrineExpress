@@ -1,0 +1,83 @@
+﻿@page
+@model VitrineExpress.Pages.Lojas.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Loja</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Loja.Cnpj" class="control-label"></label>
+                <input asp-for="Loja.Cnpj" class="form-control" />
+                <span asp-validation-for="Loja.Cnpj" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Loja.Nome" class="control-label"></label>
+                <input asp-for="Loja.Nome" class="form-control" />
+                <span asp-validation-for="Loja.Nome" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Loja.ImagemUrl" class="control-label"></label>
+                <input asp-for="Loja.ImagemUrl" class="form-control" />
+                <span asp-validation-for="Loja.ImagemUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Loja.Descricao" class="control-label"></label>
+                <input asp-for="Loja.Descricao" class="form-control" />
+                <span asp-validation-for="Loja.Descricao" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Loja.Telefone" class="control-label"></label>
+                <input asp-for="Loja.Telefone" class="form-control" />
+                <span asp-validation-for="Loja.Telefone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Loja.TaxaEntrega" class="control-label"></label>
+                <input asp-for="Loja.TaxaEntrega" class="form-control" />
+                <span asp-validation-for="Loja.TaxaEntrega" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Loja.ValorMinimoPedido" class="control-label"></label>
+                <input asp-for="Loja.ValorMinimoPedido" class="form-control" />
+                <span asp-validation-for="Loja.ValorMinimoPedido" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Loja.RetiradaDisponivel" /> @Html.DisplayNameFor(model => model.Loja.RetiradaDisponivel)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Loja.EntregaDisponivel" /> @Html.DisplayNameFor(model => model.Loja.EntregaDisponivel)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="Loja.LojistaId" class="control-label"></label>
+                <select asp-for="Loja.LojistaId" class ="form-control" asp-items="ViewBag.LojistaId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Loja.StatusAtual" class="control-label"></label>
+                <select asp-for="Loja.StatusAtual" class="form-control"></select>
+                <span asp-validation-for="Loja.StatusAtual" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,54 @@
+﻿@page
+@model VitrineExpress.Pages.ItensPedido.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ItemPedido[0].Quantidade)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ItemPedido[0].PrecoUnitario)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ItemPedido[0].Pedido)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ItemPedido[0].Produto)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.ItemPedido) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantidade)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PrecoUnitario)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Pedido.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Produto.Id)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
