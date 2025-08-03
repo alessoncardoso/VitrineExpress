@@ -1,4 +1,5 @@
-﻿using VitrineExpress.Enums;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using VitrineExpress.Enums;
 
 namespace VitrineExpress.Models
 {
@@ -12,6 +13,7 @@ namespace VitrineExpress.Models
         public string Telefone { get; set; }
         public double TaxaEntrega { get; set; }
         public double ValorMinimoPedido { get; set; }
+        [NotMapped]
         public Dictionary<string, string> HorarioFuncionamento { get; set; } = new();
         public bool RetiradaDisponivel { get; set; }
         public bool EntregaDisponivel { get; set; }
