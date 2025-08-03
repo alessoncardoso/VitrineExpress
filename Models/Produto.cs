@@ -1,4 +1,6 @@
-﻿namespace VitrineExpress.Models
+﻿using VitrineExpress.Enums;
+
+namespace VitrineExpress.Models
 {
     public class Produto
     {
