@@ -28,7 +28,7 @@ namespace VitrineExpress.Pages.Enderecos
                 return NotFound();
             }
 
-            var endereco = await _context.Endereco.FirstOrDefaultAsync(m => m.Id == id);
+            var endereco = await _context.Enderecos.FirstOrDefaultAsync(m => m.Id == id);
             if (endereco == null)
             {
                 return NotFound();

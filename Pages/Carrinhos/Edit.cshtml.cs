@@ -30,13 +30,13 @@ namespace VitrineExpress.Pages.Carrinhos
                 return NotFound();
             }
 
-            var carrinho =  await _context.Carrinho.FirstOrDefaultAsync(m => m.Id == id);
+            var carrinho =  await _context.Carrinhos.FirstOrDefaultAsync(m => m.Id == id);
             if (carrinho == null)
             {
                 return NotFound();
             }
             Carrinho = carrinho;
-           ViewData["ClienteId"] = new SelectList(_context.Cliente, "Id", "Id");
+           ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Id");
             return Page();
         }
 
@@ -72,7 +72,7 @@ namespace VitrineExpress.Pages.Carrinhos
 
         private bool CarrinhoExists(int id)
         {
-            return _context.Carrinho.Any(e => e.Id == id);
+            return _context.Carrinhos.Any(e => e.Id == id);
         }
     }
 }

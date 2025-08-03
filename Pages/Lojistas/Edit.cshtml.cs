@@ -30,13 +30,13 @@ namespace VitrineExpress.Pages.Lojistas
                 return NotFound();
             }
 
-            var lojista =  await _context.Lojista.FirstOrDefaultAsync(m => m.Id == id);
+            var lojista =  await _context.Lojistas.FirstOrDefaultAsync(m => m.Id == id);
             if (lojista == null)
             {
                 return NotFound();
             }
             Lojista = lojista;
-           ViewData["UsuarioId"] = new SelectList(_context.Usuario, "Id", "Id");
+           ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Id");
             return Page();
         }
 
@@ -72,7 +72,7 @@ namespace VitrineExpress.Pages.Lojistas
 
         private bool LojistaExists(int id)
         {
-            return _context.Lojista.Any(e => e.Id == id);
+            return _context.Lojistas.Any(e => e.Id == id);
         }
     }
 }

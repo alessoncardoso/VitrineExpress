@@ -28,7 +28,7 @@ namespace VitrineExpress.Pages.Pedidos
                 return NotFound();
             }
 
-            var pedido = await _context.Pedido.FirstOrDefaultAsync(m => m.Id == id);
+            var pedido = await _context.Pedidos.FirstOrDefaultAsync(m => m.Id == id);
             if (pedido == null)
             {
                 return NotFound();

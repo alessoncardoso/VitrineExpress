@@ -30,7 +30,7 @@ namespace VitrineExpress.Pages.Pedidos
                 return NotFound();
             }
 
-            var pedido =  await _context.Pedido.FirstOrDefaultAsync(m => m.Id == id);
+            var pedido =  await _context.Pedidos.FirstOrDefaultAsync(m => m.Id == id);
             if (pedido == null)
             {
                 return NotFound();
@@ -73,7 +73,7 @@ namespace VitrineExpress.Pages.Pedidos
 
         private bool PedidoExists(int id)
         {
-            return _context.Pedido.Any(e => e.Id == id);
+            return _context.Pedidos.Any(e => e.Id == id);
         }
     }
 }

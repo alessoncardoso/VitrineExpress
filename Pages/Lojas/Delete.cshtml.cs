@@ -29,7 +29,7 @@ namespace VitrineExpress.Pages.Lojas
                 return NotFound();
             }
 
-            var loja = await _context.Loja.FirstOrDefaultAsync(m => m.Id == id);
+            var loja = await _context.Lojas.FirstOrDefaultAsync(m => m.Id == id);
 
             if (loja == null)
             {
@@ -49,11 +49,11 @@ namespace VitrineExpress.Pages.Lojas
                 return NotFound();
             }
 
-            var loja = await _context.Loja.FindAsync(id);
+            var loja = await _context.Lojas.FindAsync(id);
             if (loja != null)
             {
                 Loja = loja;
-                _context.Loja.Remove(Loja);
+                _context.Lojas.Remove(Loja);
                 await _context.SaveChangesAsync();
             }
 

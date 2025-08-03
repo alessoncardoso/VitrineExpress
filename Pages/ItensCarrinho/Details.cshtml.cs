@@ -28,7 +28,7 @@ namespace VitrineExpress.Pages.ItensCarrinho
                 return NotFound();
             }
 
-            var itemcarrinho = await _context.ItemCarrinho.FirstOrDefaultAsync(m => m.Id == id);
+            var itemcarrinho = await _context.ItensCarrinho.FirstOrDefaultAsync(m => m.Id == id);
             if (itemcarrinho == null)
             {
                 return NotFound();

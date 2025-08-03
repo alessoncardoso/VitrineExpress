@@ -23,7 +23,7 @@ namespace VitrineExpress.Pages.Clientes
 
         public async Task OnGetAsync()
         {
-            Cliente = await _context.Cliente
+            Cliente = await _context.Clientes
                 .Include(c => c.Usuario).ToListAsync();
         }
     }

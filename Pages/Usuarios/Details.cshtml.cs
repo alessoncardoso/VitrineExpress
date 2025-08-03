@@ -28,7 +28,7 @@ namespace VitrineExpress.Pages.Usuarios
                 return NotFound();
             }
 
-            var usuario = await _context.Usuario.FirstOrDefaultAsync(m => m.Id == id);
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(m => m.Id == id);
             if (usuario == null)
             {
                 return NotFound();

@@ -22,7 +22,7 @@ namespace VitrineExpress.Pages.ItensCarrinho
         public IActionResult OnGet()
         {
         ViewData["CarrinhoId"] = new SelectList(_context.Set<Carrinho>(), "Id", "Id");
-        ViewData["ProdutoId"] = new SelectList(_context.Produto, "Id", "Id");
+        ViewData["ProdutoId"] = new SelectList(_context.Produtos, "Id", "Id");
             return Page();
         }
 
@@ -37,7 +37,7 @@ namespace VitrineExpress.Pages.ItensCarrinho
                 return Page();
             }
 
-            _context.ItemCarrinho.Add(ItemCarrinho);
+            _context.ItensCarrinho.Add(ItemCarrinho);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");

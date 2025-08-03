@@ -29,7 +29,7 @@ namespace VitrineExpress.Pages.Produtos
                 return NotFound();
             }
 
-            var produto = await _context.Produto.FirstOrDefaultAsync(m => m.Id == id);
+            var produto = await _context.Produtos.FirstOrDefaultAsync(m => m.Id == id);
 
             if (produto == null)
             {
@@ -49,11 +49,11 @@ namespace VitrineExpress.Pages.Produtos
                 return NotFound();
             }
 
-            var produto = await _context.Produto.FindAsync(id);
+            var produto = await _context.Produtos.FindAsync(id);
             if (produto != null)
             {
                 Produto = produto;
-                _context.Produto.Remove(Produto);
+                _context.Produtos.Remove(Produto);
                 await _context.SaveChangesAsync();
             }
 

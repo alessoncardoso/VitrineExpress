@@ -30,14 +30,14 @@ namespace VitrineExpress.Pages.Enderecos
                 return NotFound();
             }
 
-            var endereco =  await _context.Endereco.FirstOrDefaultAsync(m => m.Id == id);
+            var endereco =  await _context.Enderecos.FirstOrDefaultAsync(m => m.Id == id);
             if (endereco == null)
             {
                 return NotFound();
             }
             Endereco = endereco;
            ViewData["ClienteId"] = new SelectList(_context.Set<Cliente>(), "Id", "Id");
-           ViewData["LojaId"] = new SelectList(_context.Loja, "Id", "Id");
+           ViewData["LojaId"] = new SelectList(_context.Lojas, "Id", "Id");
             return Page();
         }
 
@@ -73,7 +73,7 @@ namespace VitrineExpress.Pages.Enderecos
 
         private bool EnderecoExists(int id)
         {
-            return _context.Endereco.Any(e => e.Id == id);
+            return _context.Enderecos.Any(e => e.Id == id);
         }
     }
 }

@@ -29,7 +29,7 @@ namespace VitrineExpress.Pages.Lojistas
                 return NotFound();
             }
 
-            var lojista = await _context.Lojista.FirstOrDefaultAsync(m => m.Id == id);
+            var lojista = await _context.Lojistas.FirstOrDefaultAsync(m => m.Id == id);
 
             if (lojista == null)
             {
@@ -49,11 +49,11 @@ namespace VitrineExpress.Pages.Lojistas
                 return NotFound();
             }
 
-            var lojista = await _context.Lojista.FindAsync(id);
+            var lojista = await _context.Lojistas.FindAsync(id);
             if (lojista != null)
             {
                 Lojista = lojista;
-                _context.Lojista.Remove(Lojista);
+                _context.Lojistas.Remove(Lojista);
                 await _context.SaveChangesAsync();
             }
 

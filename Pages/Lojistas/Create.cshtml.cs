@@ -21,7 +21,7 @@ namespace VitrineExpress.Pages.Lojistas
 
         public IActionResult OnGet()
         {
-        ViewData["UsuarioId"] = new SelectList(_context.Usuario, "Id", "Id");
+        ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Id");
             return Page();
         }
 
@@ -36,7 +36,7 @@ namespace VitrineExpress.Pages.Lojistas
                 return Page();
             }
 
-            _context.Lojista.Add(Lojista);
+            _context.Lojistas.Add(Lojista);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");

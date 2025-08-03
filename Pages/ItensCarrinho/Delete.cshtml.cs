@@ -29,7 +29,7 @@ namespace VitrineExpress.Pages.ItensCarrinho
                 return NotFound();
             }
 
-            var itemcarrinho = await _context.ItemCarrinho.FirstOrDefaultAsync(m => m.Id == id);
+            var itemcarrinho = await _context.ItensCarrinho.FirstOrDefaultAsync(m => m.Id == id);
 
             if (itemcarrinho == null)
             {
@@ -49,11 +49,11 @@ namespace VitrineExpress.Pages.ItensCarrinho
                 return NotFound();
             }
 
-            var itemcarrinho = await _context.ItemCarrinho.FindAsync(id);
+            var itemcarrinho = await _context.ItensCarrinho.FindAsync(id);
             if (itemcarrinho != null)
             {
                 ItemCarrinho = itemcarrinho;
-                _context.ItemCarrinho.Remove(ItemCarrinho);
+                _context.ItensCarrinho.Remove(ItemCarrinho);
                 await _context.SaveChangesAsync();
             }
 

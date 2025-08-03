@@ -21,8 +21,8 @@ namespace VitrineExpress.Pages.ItensPedido
 
         public IActionResult OnGet()
         {
-        ViewData["PedidoId"] = new SelectList(_context.Pedido, "Id", "Id");
-        ViewData["ProdutoId"] = new SelectList(_context.Produto, "Id", "Id");
+        ViewData["PedidoId"] = new SelectList(_context.Pedidos, "Id", "Id");
+        ViewData["ProdutoId"] = new SelectList(_context.Produtos, "Id", "Id");
             return Page();
         }
 
@@ -37,7 +37,7 @@ namespace VitrineExpress.Pages.ItensPedido
                 return Page();
             }
 
-            _context.ItemPedido.Add(ItemPedido);
+            _context.ItensPedido.Add(ItemPedido);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");

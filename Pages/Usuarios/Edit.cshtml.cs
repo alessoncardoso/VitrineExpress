@@ -30,7 +30,7 @@ namespace VitrineExpress.Pages.Usuarios
                 return NotFound();
             }
 
-            var usuario =  await _context.Usuario.FirstOrDefaultAsync(m => m.Id == id);
+            var usuario =  await _context.Usuarios.FirstOrDefaultAsync(m => m.Id == id);
             if (usuario == null)
             {
                 return NotFound();
@@ -71,7 +71,7 @@ namespace VitrineExpress.Pages.Usuarios
 
         private bool UsuarioExists(int id)
         {
-            return _context.Usuario.Any(e => e.Id == id);
+            return _context.Usuarios.Any(e => e.Id == id);
         }
     }
 }

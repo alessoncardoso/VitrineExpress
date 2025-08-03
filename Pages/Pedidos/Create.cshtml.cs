@@ -37,7 +37,7 @@ namespace VitrineExpress.Pages.Pedidos
                 return Page();
             }
 
-            _context.Pedido.Add(Pedido);
+            _context.Pedidos.Add(Pedido);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");

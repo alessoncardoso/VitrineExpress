@@ -30,13 +30,13 @@ namespace VitrineExpress.Pages.Clientes
                 return NotFound();
             }
 
-            var cliente =  await _context.Cliente.FirstOrDefaultAsync(m => m.Id == id);
+            var cliente =  await _context.Clientes.FirstOrDefaultAsync(m => m.Id == id);
             if (cliente == null)
             {
                 return NotFound();
             }
             Cliente = cliente;
-           ViewData["UsuarioId"] = new SelectList(_context.Usuario, "Id", "Id");
+           ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Id");
             return Page();
         }
 
@@ -72,7 +72,7 @@ namespace VitrineExpress.Pages.Clientes
 
         private bool ClienteExists(int id)
         {
-            return _context.Cliente.Any(e => e.Id == id);
+            return _context.Clientes.Any(e => e.Id == id);
         }
     }
 }

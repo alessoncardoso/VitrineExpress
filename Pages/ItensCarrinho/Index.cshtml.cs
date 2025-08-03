@@ -23,7 +23,7 @@ namespace VitrineExpress.Pages.ItensCarrinho
 
         public async Task OnGetAsync()
         {
-            ItemCarrinho = await _context.ItemCarrinho
+            ItemCarrinho = await _context.ItensCarrinho
                 .Include(i => i.Carrinho)
                 .Include(i => i.Produto).ToListAsync();
         }

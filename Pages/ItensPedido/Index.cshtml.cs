@@ -23,7 +23,7 @@ namespace VitrineExpress.Pages.ItensPedido
 
         public async Task OnGetAsync()
         {
-            ItemPedido = await _context.ItemPedido
+            ItemPedido = await _context.ItensPedido
                 .Include(i => i.Pedido)
                 .Include(i => i.Produto).ToListAsync();
         }

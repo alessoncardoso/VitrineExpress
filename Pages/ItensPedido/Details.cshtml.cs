@@ -28,7 +28,7 @@ namespace VitrineExpress.Pages.ItensPedido
                 return NotFound();
             }
 
-            var itempedido = await _context.ItemPedido.FirstOrDefaultAsync(m => m.Id == id);
+            var itempedido = await _context.ItensPedido.FirstOrDefaultAsync(m => m.Id == id);
             if (itempedido == null)
             {
                 return NotFound();

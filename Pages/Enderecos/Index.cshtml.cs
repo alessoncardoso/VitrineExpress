@@ -23,7 +23,7 @@ namespace VitrineExpress.Pages.Enderecos
 
         public async Task OnGetAsync()
         {
-            Endereco = await _context.Endereco
+            Endereco = await _context.Enderecos
                 .Include(e => e.Cliente)
                 .Include(e => e.Loja).ToListAsync();
         }

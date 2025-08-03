@@ -23,7 +23,7 @@ namespace VitrineExpress.Pages.Usuarios
 
         public async Task OnGetAsync()
         {
-            Usuario = await _context.Usuario.ToListAsync();
+            Usuario = await _context.Usuarios.ToListAsync();
         }
     }
 }

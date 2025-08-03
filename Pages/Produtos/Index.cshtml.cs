@@ -23,7 +23,7 @@ namespace VitrineExpress.Pages.Produtos
 
         public async Task OnGetAsync()
         {
-            Produto = await _context.Produto
+            Produto = await _context.Produtos
                 .Include(p => p.Loja).ToListAsync();
         }
     }

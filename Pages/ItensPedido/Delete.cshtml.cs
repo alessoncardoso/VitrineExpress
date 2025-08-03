@@ -29,7 +29,7 @@ namespace VitrineExpress.Pages.ItensPedido
                 return NotFound();
             }
 
-            var itempedido = await _context.ItemPedido.FirstOrDefaultAsync(m => m.Id == id);
+            var itempedido = await _context.ItensPedido.FirstOrDefaultAsync(m => m.Id == id);
 
             if (itempedido == null)
             {
@@ -49,11 +49,11 @@ namespace VitrineExpress.Pages.ItensPedido
                 return NotFound();
             }
 
-            var itempedido = await _context.ItemPedido.FindAsync(id);
+            var itempedido = await _context.ItensPedido.FindAsync(id);
             if (itempedido != null)
             {
                 ItemPedido = itempedido;
-                _context.ItemPedido.Remove(ItemPedido);
+                _context.ItensPedido.Remove(ItemPedido);
                 await _context.SaveChangesAsync();
             }
 

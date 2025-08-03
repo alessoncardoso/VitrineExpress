@@ -21,7 +21,7 @@ namespace VitrineExpress.Pages.Carrinhos
 
         public IActionResult OnGet()
         {
-        ViewData["ClienteId"] = new SelectList(_context.Cliente, "Id", "Id");
+        ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Id");
             return Page();
         }
 
@@ -36,7 +36,7 @@ namespace VitrineExpress.Pages.Carrinhos
                 return Page();
             }
 
-            _context.Carrinho.Add(Carrinho);
+            _context.Carrinhos.Add(Carrinho);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");

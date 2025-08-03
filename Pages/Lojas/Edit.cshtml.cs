@@ -30,13 +30,13 @@ namespace VitrineExpress.Pages.Lojas
                 return NotFound();
             }
 
-            var loja =  await _context.Loja.FirstOrDefaultAsync(m => m.Id == id);
+            var loja =  await _context.Lojas.FirstOrDefaultAsync(m => m.Id == id);
             if (loja == null)
             {
                 return NotFound();
             }
             Loja = loja;
-           ViewData["LojistaId"] = new SelectList(_context.Lojista, "Id", "Id");
+           ViewData["LojistaId"] = new SelectList(_context.Lojistas, "Id", "Id");
             return Page();
         }
 
@@ -72,7 +72,7 @@ namespace VitrineExpress.Pages.Lojas
 
         private bool LojaExists(int id)
         {
-            return _context.Loja.Any(e => e.Id == id);
+            return _context.Lojas.Any(e => e.Id == id);
         }
     }
 }

@@ -14,15 +14,15 @@ namespace VitrineExpress.Data
         {
         }
 
-        public DbSet<VitrineExpress.Models.Usuario> Usuario { get; set; }
-        public DbSet<VitrineExpress.Models.Produto> Produto { get; set; }
-        public DbSet<VitrineExpress.Models.Pedido> Pedido { get; set; }
-        public DbSet<VitrineExpress.Models.Lojista> Lojista { get; set; }
-        public DbSet<VitrineExpress.Models.Loja> Loja { get; set; }
-        public DbSet<VitrineExpress.Models.ItemPedido> ItemPedido { get; set; }
-        public DbSet<VitrineExpress.Models.ItemCarrinho> ItemCarrinho { get; set; }
-        public DbSet<VitrineExpress.Models.Endereco> Endereco { get; set; }
-        public DbSet<VitrineExpress.Models.Cliente> Cliente { get; set; }
-        public DbSet<VitrineExpress.Models.Carrinho> Carrinho { get; set; }
+        public DbSet<VitrineExpress.Models.Usuario> Usuarios { get; set; }
+        public DbSet<VitrineExpress.Models.Produto> Produtos { get; set; }
+        public DbSet<VitrineExpress.Models.Pedido> Pedidos { get; set; }
+        public DbSet<VitrineExpress.Models.Lojista> Lojistas { get; set; }
+        public DbSet<VitrineExpress.Models.Loja> Lojas { get; set; }
+        public DbSet<VitrineExpress.Models.ItemPedido> ItensPedido { get; set; }
+        public DbSet<VitrineExpress.Models.ItemCarrinho> ItensCarrinho { get; set; }
+        public DbSet<VitrineExpress.Models.Endereco> Enderecos { get; set; }
+        public DbSet<VitrineExpress.Models.Cliente> Clientes { get; set; }
+        public DbSet<VitrineExpress.Models.Carrinho> Carrinhos { get; set; }
     }
 }

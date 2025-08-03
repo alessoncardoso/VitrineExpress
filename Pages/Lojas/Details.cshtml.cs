@@ -28,7 +28,7 @@ namespace VitrineExpress.Pages.Lojas
                 return NotFound();
             }
 
-            var loja = await _context.Loja.FirstOrDefaultAsync(m => m.Id == id);
+            var loja = await _context.Lojas.FirstOrDefaultAsync(m => m.Id == id);
             if (loja == null)
             {
                 return NotFound();

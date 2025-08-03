@@ -22,7 +22,7 @@ namespace VitrineExpress.Pages.Enderecos
         public IActionResult OnGet()
         {
         ViewData["ClienteId"] = new SelectList(_context.Set<Cliente>(), "Id", "Id");
-        ViewData["LojaId"] = new SelectList(_context.Loja, "Id", "Id");
+        ViewData["LojaId"] = new SelectList(_context.Lojas, "Id", "Id");
             return Page();
         }
 
@@ -37,7 +37,7 @@ namespace VitrineExpress.Pages.Enderecos
                 return Page();
             }
 
-            _context.Endereco.Add(Endereco);
+            _context.Enderecos.Add(Endereco);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");

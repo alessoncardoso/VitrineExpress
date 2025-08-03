@@ -29,7 +29,7 @@ namespace VitrineExpress.Pages.Usuarios
                 return NotFound();
             }
 
-            var usuario = await _context.Usuario.FirstOrDefaultAsync(m => m.Id == id);
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(m => m.Id == id);
 
             if (usuario == null)
             {
@@ -49,11 +49,11 @@ namespace VitrineExpress.Pages.Usuarios
                 return NotFound();
             }
 
-            var usuario = await _context.Usuario.FindAsync(id);
+            var usuario = await _context.Usuarios.FindAsync(id);
             if (usuario != null)
             {
                 Usuario = usuario;
-                _context.Usuario.Remove(Usuario);
+                _context.Usuarios.Remove(Usuario);
                 await _context.SaveChangesAsync();
             }
 

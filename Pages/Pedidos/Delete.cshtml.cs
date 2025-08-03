@@ -29,7 +29,7 @@ namespace VitrineExpress.Pages.Pedidos
                 return NotFound();
             }
 
-            var pedido = await _context.Pedido.FirstOrDefaultAsync(m => m.Id == id);
+            var pedido = await _context.Pedidos.FirstOrDefaultAsync(m => m.Id == id);
 
             if (pedido == null)
             {
@@ -49,11 +49,11 @@ namespace VitrineExpress.Pages.Pedidos
                 return NotFound();
             }
 
-            var pedido = await _context.Pedido.FindAsync(id);
+            var pedido = await _context.Pedidos.FindAsync(id);
             if (pedido != null)
             {
                 Pedido = pedido;
-                _context.Pedido.Remove(Pedido);
+                _context.Pedidos.Remove(Pedido);
                 await _context.SaveChangesAsync();
             }
 

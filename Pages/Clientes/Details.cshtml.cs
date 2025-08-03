@@ -28,7 +28,7 @@ namespace VitrineExpress.Pages.Clientes
                 return NotFound();
             }
 
-            var cliente = await _context.Cliente.FirstOrDefaultAsync(m => m.Id == id);
+            var cliente = await _context.Clientes.FirstOrDefaultAsync(m => m.Id == id);
             if (cliente == null)
             {
                 return NotFound();

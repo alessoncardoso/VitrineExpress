@@ -30,7 +30,7 @@ namespace VitrineExpress.Pages.Produtos
                 return NotFound();
             }
 
-            var produto =  await _context.Produto.FirstOrDefaultAsync(m => m.Id == id);
+            var produto =  await _context.Produtos.FirstOrDefaultAsync(m => m.Id == id);
             if (produto == null)
             {
                 return NotFound();
@@ -72,7 +72,7 @@ namespace VitrineExpress.Pages.Produtos
 
         private bool ProdutoExists(int id)
         {
-            return _context.Produto.Any(e => e.Id == id);
+            return _context.Produtos.Any(e => e.Id == id);
         }
     }
 }

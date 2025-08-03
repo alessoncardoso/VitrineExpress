@@ -35,7 +35,7 @@ namespace VitrineExpress.Pages.Usuarios
                 return Page();
             }
 
-            _context.Usuario.Add(Usuario);
+            _context.Usuarios.Add(Usuario);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");

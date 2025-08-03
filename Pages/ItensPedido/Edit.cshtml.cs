@@ -30,14 +30,14 @@ namespace VitrineExpress.Pages.ItensPedido
                 return NotFound();
             }
 
-            var itempedido =  await _context.ItemPedido.FirstOrDefaultAsync(m => m.Id == id);
+            var itempedido =  await _context.ItensPedido.FirstOrDefaultAsync(m => m.Id == id);
             if (itempedido == null)
             {
                 return NotFound();
             }
             ItemPedido = itempedido;
-           ViewData["PedidoId"] = new SelectList(_context.Pedido, "Id", "Id");
-           ViewData["ProdutoId"] = new SelectList(_context.Produto, "Id", "Id");
+           ViewData["PedidoId"] = new SelectList(_context.Pedidos, "Id", "Id");
+           ViewData["ProdutoId"] = new SelectList(_context.Produtos, "Id", "Id");
             return Page();
         }
 
@@ -73,7 +73,7 @@ namespace VitrineExpress.Pages.ItensPedido
 
         private bool ItemPedidoExists(int id)
         {
-            return _context.ItemPedido.Any(e => e.Id == id);
+            return _context.ItensPedido.Any(e => e.Id == id);
         }
     }
 }
