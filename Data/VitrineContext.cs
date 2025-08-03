@@ -14,7 +14,7 @@ namespace VitrineExpress.Data
         {
         }
 
-        public DbSet<VitrineExpress.Models.Usuario> Usuario { get; set; } = default!;
+        public DbSet<VitrineExpress.Models.Usuario> Usuario { get; set; }
         public DbSet<VitrineExpress.Models.Produto> Produto { get; set; }
         public DbSet<VitrineExpress.Models.Pedido> Pedido { get; set; }
         public DbSet<VitrineExpress.Models.Lojista> Lojista { get; set; }
