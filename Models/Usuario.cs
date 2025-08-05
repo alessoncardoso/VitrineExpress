@@ -11,7 +11,5 @@ namespace VitrineExpress.Models
         public string Senha { get; set; }
         public Cliente Cliente { get; set; }
         public Lojista Lojista { get; set; }
-
-        public TipoUsuario TipoUsuario { get; set; }
     }
 }
