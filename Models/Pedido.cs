@@ -1,18 +1,32 @@
-﻿using VitrineExpress.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using VitrineExpress.Enums;
 
 namespace VitrineExpress.Models
 {
     public class Pedido
     {
         public int Id { get; set; }
-        public DateTime DataPedido { get; set; }
-        public decimal ValorTotal { get; set; }
-        public int ClienteId { get; set; }
-        public Cliente Cliente { get; set; }
-        public int LojaId { get; set; }
-        public Loja Loja { get; set; }
 
+        [Required]
+        public DateTime DataPedido { get; set; }
+
+        [Range(0.01, double.MaxValue)]
+        public decimal ValorTotal { get; set; }
+
+        [Required]
+        public int ClienteId { get; set; }
+
+        public Cliente? Cliente { get; set; }
+
+        [Required]
+        public int LojaId { get; set; }
+
+        public Loja? Loja { get; set; }
+
+        [Required]
         public StatusPedido StatusPedido { get; set; }
+
+        [Required]
         public TipoEntrega TipoEntrega { get; set; }
 
         public ICollection<ItemPedido> ItensPedido { get; set; } = new List<ItemPedido>();
