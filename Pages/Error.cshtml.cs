@@ -8,8 +8,7 @@ namespace VitrineExpress.Pages
     [IgnoreAntiforgeryToken]
     public class ErrorModel : PageModel
     {
-        // Removido '?' para evitar avisos de referência anulável
-        public string RequestId { get; set; }
+        public string? RequestId { get; set; }
 
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 
