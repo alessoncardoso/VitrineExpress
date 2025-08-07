@@ -1,0 +1,52 @@
+﻿@page
+@model VitrineExpress.Pages.Account.RegisterModel
+
+@{
+    Layout = "_LayoutAccount";
+    ViewData["Title"] = "Register";
+}
+
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="col-12 col-sm-8 col-md-6 col-lg-4">
+        <h1 class="text-center mb-4">Cadastre-se</h1>
+
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Usuario.Nome" type="text" class="form-control" id="nomeInput" placeholder="Seu nome completo" />
+                <label asp-for="Usuario.Nome" for="nomeInput">Nome</label>
+                <span asp-validation-for="Usuario.Nome" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Usuario.Email" type="email" class="form-control" id="emailInput" placeholder="seu@email.com" />
+                <label asp-for="Usuario.Email" for="emailInput">Email</label>
+                <span asp-validation-for="Usuario.Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-4">
+                <input asp-for="Usuario.Senha" type="password" class="form-control" id="senhaInput" placeholder="Sua senha" />
+                <label asp-for="Usuario.Senha" for="senhaInput">Senha</label>
+                <span asp-validation-for="Usuario.Senha" class="text-danger"></span>
+            </div>
+
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary btn-lg">Cadastrar</button>
+            </div>
+        </form>
+
+        <div class="text-center mt-3">
+            <span>
+                Já tem uma conta?
+                <a asp-page="./Login">Entre</a>
+            </span>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

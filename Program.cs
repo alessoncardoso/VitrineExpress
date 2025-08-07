@@ -10,6 +10,28 @@ builder.Services.AddDbContext<VitrineContext>(options =>
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+// Configure Identity services
+builder.Services.AddRazorPages(options =>
+{
+    // Exige autenticação para todas as páginas por padrão
+    options.Conventions.AuthorizeFolder("/");
+
+    // Permite acesso anônimo à página de Login e Register
+    options.Conventions.AllowAnonymousToPage("/Account/Login");
+    options.Conventions.AllowAnonymousToPage("/Account/Register");
+});
+
+
+// Configure authentication and authorization
+builder.Services.AddAuthentication("VitrineCookie")
+    .AddCookie("VitrineCookie", options =>
+    {
+        options.LoginPath = "/Account/Login";
+        options.LogoutPath = "/Account/Logout";
+    });
+
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -39,6 +61,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();

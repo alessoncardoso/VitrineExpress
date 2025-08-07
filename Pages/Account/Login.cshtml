@@ -1,0 +1,46 @@
+﻿@page
+@model VitrineExpress.Pages.Account.LoginModel
+
+@{
+    Layout = "_LayoutAccount";
+    ViewData["Title"] = "Login";
+}
+
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="col-12 col-sm-8 col-md-6 col-lg-4">
+        <h1 class="text-center mb-4">Login</h1>
+
+        <form id="account" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Email" class="form-control i" id="floatingInput" type="email" placeholder="seu@email.com" />
+                <label asp-for="Email" for="floatingInput">Email</label>
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-4">
+                <input asp-for="Senha" class="form-control" id="floatingPassword" type="password" placeholder="Sua senha" />
+                <label asp-for="Senha" for="floatingPassword">Senha</label>
+                <span asp-validation-for="Senha" class="text-danger"></span>
+            </div>
+
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary btn-lg">Entrar</button>
+            </div>
+        </form>
+
+        <div class="text-center mt-3">
+            <span>
+                Não tem uma conta?
+                <a asp-page="./Register">Cadastre-se</a>
+            </span>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
