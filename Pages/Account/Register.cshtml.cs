@@ -30,6 +30,13 @@ namespace VitrineExpress.Pages.Account
         // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
+            // Verifica se o e-mail já existe
+            if (_context.Usuarios.Any(u => u.Email == Usuario.Email))
+            {
+                ModelState.AddModelError("Usuario.Email", "Este e-mail já está em uso.");
+                return Page();
+            }
+
             if (!ModelState.IsValid)
             {
                 return Page();

@@ -50,6 +50,11 @@ namespace VitrineExpress.Data
                 .HasForeignKey<Cliente>(c => c.UsuarioId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            // Email único para Usuario
+            modelBuilder.Entity<Usuario>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
+
             // Usuario → Lojista (um-para-um)
             modelBuilder.Entity<Usuario>()
                 .HasOne(u => u.Lojista)
