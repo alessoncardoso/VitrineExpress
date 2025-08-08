@@ -30,7 +30,7 @@ namespace VitrineExpress.Pages.Account
         }
 
         [BindProperty]
-        [EmailAddress]
+        [EmailAddress(ErrorMessage = "Formato de e-mail inválido.")]
         [Required(ErrorMessage = "O e-mail é obrigatório.")]
         public string Email { get; set; }
 

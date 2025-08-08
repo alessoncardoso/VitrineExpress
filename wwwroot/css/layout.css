@@ -1,0 +1,95 @@
+﻿:root {
+    --color-primary: #7F00FF; /* Roxo */
+    --color-secondary: #FFFFFF; /* Branco */
+    --color-highlight: #FFD700; /* Amarelo */
+
+    --color-white: #FFFFFF; /* Branco puro */
+    --color-black: #000000; /* Preto puro */
+
+    --color-text-primary: #1a1a1a; /* Preto suave */
+    --color-text-secondary: #6b6b6b; /* Cinza médio */
+
+    --color-bg-primary: #F7F7F9; /* Cinza bem claro */
+    --color-bg-secondary: #19123B; /* Roxo escuro */
+}
+
+body {
+    background: var(--color-bg-primary);
+}
+
+.card {
+    background: var(--color-white);
+    border-radius: 0.25rem;
+    border-top: 5px solid var(--color-primary);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+    padding: 2rem 1.5rem;
+    overflow: hidden;
+}
+
+.title {
+    color: var(--color-primary);
+    font-weight: 800;
+    letter-spacing: 0.2px;
+}
+
+.btn-highlight {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    border: none;
+    transition: transform .06s ease, opacity .2s ease, box-shadow .2s ease;
+}
+
+.btn-highlight:hover {
+    opacity: 0.9;
+    color: var(--color-white);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.btn-highlight:active {
+    transform: translateY(1px);
+}
+
+.form-control {
+    border-radius: 0.25rem;
+    border-color: var(--color-primary);
+}
+
+.form-control:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 0.2rem rgba(127,0,255,0.15);
+}
+
+label {
+    color: var(--color-primary);
+}
+
+/* Botão de mostrar/ocultar senha */
+.password-toggle {
+    position: absolute;
+    right: 0.5rem;
+    top: 0.8rem;
+    height: 2rem;
+    padding: 0 0.6rem;
+    color: var(--color-primary);
+    background: transparent;
+    border: none;
+    font-weight: 600;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.link {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+.link:hover {
+    text-decoration: underline;
+}
+
+/* Melhorias responsivas */
+@media (min-width: 768px) {
+    .card {
+        padding: 2.25rem 2rem;
+    }
+}

@@ -7,34 +7,48 @@
 }
 
 <div class="d-flex justify-content-center align-items-center vh-100">
-    <div class="col-12 col-sm-8 col-md-6 col-lg-4">
-        <h1 class="text-center mb-4">Login</h1>
+    <div class="col-11 col-sm-9 col-md-7 col-lg-5 col-xl-4">
 
-        <form id="account" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+        <div class="card">
 
-            <div class="form-floating mb-3">
-                <input asp-for="Email" class="form-control i" id="floatingInput" type="email" placeholder="seu@email.com" />
-                <label asp-for="Email" for="floatingInput">Email</label>
-                <span asp-validation-for="Email" class="text-danger"></span>
+            <h1 class="text-center mb-2 title">Login</h1>
+            <p class="text-center text-muted mb-4">Entre com suas credenciais para continuar</p>
+            
+            <form method="post">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+                <div class="form-floating mb-3">
+                    <input asp-for="Email" class="form-control" id="floatingInput" type="email" placeholder="seu@email.com" />
+                    <label asp-for="Email" for="floatingInput">Email</label>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-floating mb-4">
+                    <input asp-for="Senha" class="form-control" id="floatingPassword" type="password" placeholder="Sua senha" />
+                    <label asp-for="Senha" for="floatingPassword">Senha</label>
+                    <button type="button"
+                            class="password-toggle"
+                            id="togglePassword"
+                            aria-label="Mostrar ou ocultar senha"
+                            aria-controls="floatingPassword"
+                            aria-pressed="false">
+                        <i class="bi bi-eye-slash-fill"></i>
+                    </button>
+                    <span asp-validation-for="Senha" class="text-danger d-block mt-1"></span>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-highlight btn-lg">Entrar</button>
+                </div>
+            </form>
+
+            <div class="text-center small mt-3">
+                <span>
+                    Não tem uma conta?
+                    <a asp-page="./Register" class="link">Cadastre-se</a>
+                </span>
             </div>
-
-            <div class="form-floating mb-4">
-                <input asp-for="Senha" class="form-control" id="floatingPassword" type="password" placeholder="Sua senha" />
-                <label asp-for="Senha" for="floatingPassword">Senha</label>
-                <span asp-validation-for="Senha" class="text-danger"></span>
-            </div>
-
-            <div class="d-grid">
-                <button type="submit" class="btn btn-primary btn-lg">Entrar</button>
-            </div>
-        </form>
-
-        <div class="text-center mt-3">
-            <span>
-                Não tem uma conta?
-                <a asp-page="./Register">Cadastre-se</a>
-            </span>
         </div>
     </div>
 </div>
