@@ -7,40 +7,54 @@
 }
 
 <div class="d-flex justify-content-center align-items-center vh-100">
-    <div class="col-12 col-sm-8 col-md-6 col-lg-4">
-        <h1 class="text-center mb-4">Cadastre-se</h1>
+    <div class="col-11 col-sm-9 col-md-7 col-lg-5 col-xl-4">
+    
+        <div class="card">
 
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            <h1 class="text-center mb-2 title">Cadastre-se</h1>
+            <p class="text-center text-muted mb-4">Cadastre-se para continuar</p>
 
-            <div class="form-floating mb-3">
-                <input asp-for="Usuario.Nome" type="text" class="form-control" id="nomeInput" placeholder="Seu nome completo" />
-                <label asp-for="Usuario.Nome" for="nomeInput">Nome</label>
-                <span asp-validation-for="Usuario.Nome" class="text-danger"></span>
+            <form method="post">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+                <div class="form-floating mb-3">
+                        <input asp-for="Usuario.Nome" type="text" class="form-control" id="floatingInput" placeholder="Seu nome completo" />
+                        <label asp-for="Usuario.Nome" for="floatingInput">Nome</label>
+                    <span asp-validation-for="Usuario.Nome" class="text-danger"></span>
+                </div>
+
+                <div class="form-floating mb-3">
+                        <input asp-for="Usuario.Email" type="email" class="form-control" id="floatingInputt" placeholder="seu@email.com" />
+                        <label asp-for="Usuario.Email" for="floatingInput">Email</label>
+                    <span asp-validation-for="Usuario.Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-floating mb-4">
+                        <input asp-for="Usuario.Senha" type="password" class="form-control" id="floatingPassword" placeholder="Sua senha" />
+                        <label asp-for="Usuario.Senha" for="floatingPassword">Senha</label>
+                    <button type="button"
+                            class="password-toggle"
+                            id="togglePassword"
+                            aria-label="Mostrar ou ocultar senha"
+                            aria-controls="floatingPassword"
+                            aria-pressed="false">
+                        <i class="bi bi-eye-slash-fill"></i>
+                    </button>
+                    <span asp-validation-for="Usuario.Senha" class="text-danger"></span>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-highlight btn-lg">Cadastrar</button>
+                </div>
+            </form>
+
+            <div class="text-center small mt-3">
+                <span>
+                    Já tem uma conta?
+                    <a asp-page="./Login" class="link">Entre</a>
+                </span>
             </div>
-
-            <div class="form-floating mb-3">
-                <input asp-for="Usuario.Email" type="email" class="form-control" id="emailInput" placeholder="seu@email.com" />
-                <label asp-for="Usuario.Email" for="emailInput">Email</label>
-                <span asp-validation-for="Usuario.Email" class="text-danger"></span>
-            </div>
-
-            <div class="form-floating mb-4">
-                <input asp-for="Usuario.Senha" type="password" class="form-control" id="senhaInput" placeholder="Sua senha" />
-                <label asp-for="Usuario.Senha" for="senhaInput">Senha</label>
-                <span asp-validation-for="Usuario.Senha" class="text-danger"></span>
-            </div>
-
-            <div class="d-grid">
-                <button type="submit" class="btn btn-primary btn-lg">Cadastrar</button>
-            </div>
-        </form>
-
-        <div class="text-center mt-3">
-            <span>
-                Já tem uma conta?
-                <a asp-page="./Login">Entre</a>
-            </span>
         </div>
     </div>
 </div>
