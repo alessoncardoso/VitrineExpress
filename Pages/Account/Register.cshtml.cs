@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -41,6 +42,10 @@ namespace VitrineExpress.Pages.Account
             {
                 return Page();
             }
+
+            // Cria o hasher e gera o hash da senha
+            var hasher = new PasswordHasher<Usuario>();
+            Usuario.Senha = hasher.HashPassword(Usuario, Usuario.Senha);
 
             _context.Usuarios.Add(Usuario);
             await _context.SaveChangesAsync();

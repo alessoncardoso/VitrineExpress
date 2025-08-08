@@ -5,9 +5,11 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using VitrineExpress.Data;
 using VitrineExpress.Models;
 
@@ -28,12 +30,12 @@ namespace VitrineExpress.Pages.Account
         }
 
         [BindProperty]
-        [Required]
         [EmailAddress]
+        [Required(ErrorMessage = "O e-mail é obrigatório.")]
         public string Email { get; set; }
 
         [BindProperty]
-        [Required]
+        [Required(ErrorMessage = "A senha é obrigatória.")]
         public string Senha { get; set; }
 
         // For more information, see https://aka.ms/RazorPagesCRUD.
@@ -44,7 +46,9 @@ namespace VitrineExpress.Pages.Account
                 return Page();
             }
 
-            var usuario = _context.Usuarios.FirstOrDefault(u => u.Email == Email && u.Senha == Senha);
+            // Busca o usuário pelo email
+            var usuario = await _context.Usuarios
+                .FirstOrDefaultAsync(u => u.Email == Email);
 
             if (usuario == null)
             {
@@ -52,7 +56,17 @@ namespace VitrineExpress.Pages.Account
                 return Page();
             }
 
-            // Aqui você pode adicionar a lógica de autenticação, como criar um cookie de autenticação
+            // Verifica a senha (usando PasswordHasher)
+            var hasher = new PasswordHasher<Usuario>();
+            var result = hasher.VerifyHashedPassword(usuario, usuario.Senha, Senha);
+
+            if (result != PasswordVerificationResult.Success)
+            {
+                ModelState.AddModelError(string.Empty, "Email ou senha inválidos.");
+                return Page();
+            }
+
+            // Login válido – cria os claims para autenticação
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, usuario.Nome),
