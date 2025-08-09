@@ -17,12 +17,10 @@ namespace VitrineExpress.Data
         public DbSet<VitrineExpress.Models.Usuario> Usuarios { get; set; }
         public DbSet<VitrineExpress.Models.Produto> Produtos { get; set; }
         public DbSet<VitrineExpress.Models.Pedido> Pedidos { get; set; }
-        public DbSet<VitrineExpress.Models.Lojista> Lojistas { get; set; }
         public DbSet<VitrineExpress.Models.Loja> Lojas { get; set; }
         public DbSet<VitrineExpress.Models.ItemPedido> ItensPedido { get; set; }
         public DbSet<VitrineExpress.Models.ItemCarrinho> ItensCarrinho { get; set; }
         public DbSet<VitrineExpress.Models.Endereco> Enderecos { get; set; }
-        public DbSet<VitrineExpress.Models.Cliente> Clientes { get; set; }
         public DbSet<VitrineExpress.Models.Carrinho> Carrinhos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -33,61 +31,45 @@ namespace VitrineExpress.Data
             modelBuilder.Entity<Usuario>().ToTable("Usuarios");
             modelBuilder.Entity<Produto>().ToTable("Produtos");
             modelBuilder.Entity<Pedido>().ToTable("Pedidos");
-            modelBuilder.Entity<Lojista>().ToTable("Lojistas");
             modelBuilder.Entity<Loja>().ToTable("Lojas");
             modelBuilder.Entity<ItemPedido>().ToTable("ItensPedido");
             modelBuilder.Entity<ItemCarrinho>().ToTable("ItensCarrinho");
             modelBuilder.Entity<Endereco>().ToTable("Enderecos");
-            modelBuilder.Entity<Cliente>().ToTable("Clientes");
             modelBuilder.Entity<Carrinho>().ToTable("Carrinhos");
 
             // Configurações adicionais, como chaves primárias, relacionamentos, etc.
 
-            // Usuario → Cliente (um-para-um)
-            modelBuilder.Entity<Usuario>()
-                .HasOne(u => u.Cliente)
-                .WithOne(c => c.Usuario)
-                .HasForeignKey<Cliente>(c => c.UsuarioId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            // Email único para Usuario
+            // Email único para Usuário
             modelBuilder.Entity<Usuario>()
                 .HasIndex(u => u.Email)
                 .IsUnique();
 
-            // Usuario → Lojista (um-para-um)
+            // Usuário → Endereços (um-para-muitos)
             modelBuilder.Entity<Usuario>()
-                .HasOne(u => u.Lojista)
-                .WithOne(l => l.Usuario)
-                .HasForeignKey<Lojista>(l => l.UsuarioId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            // Cliente → Endereços (um-para-muitos)
-            modelBuilder.Entity<Cliente>()
-                .HasMany(c => c.Enderecos)
-                .WithOne(e => e.Cliente)
-                .HasForeignKey(e => e.ClienteId)
+                .HasMany(u => u.Enderecos)
+                .WithOne(e => e.Usuario)
+                .HasForeignKey(e => e.UsuarioId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Cliente → Carrinho (um-para-muitos)
-            modelBuilder.Entity<Cliente>()
-                .HasMany(c => c.Carrinhos)
-                .WithOne(ca => ca.Cliente)
-                .HasForeignKey(ca => ca.ClienteId)
+            // Usuário → Carrinhos (um-para-muitos)
+            modelBuilder.Entity<Usuario>()
+                .HasMany(u => u.Carrinhos)
+                .WithOne(c => c.Usuario)
+                .HasForeignKey(c => c.UsuarioId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Cliente → Pedido (um-para-muitos)
-            modelBuilder.Entity<Cliente>()
-                .HasMany(c => c.Pedidos)
-                .WithOne(p => p.Cliente)
-                .HasForeignKey(p => p.ClienteId)
+            // Usuário → Pedidos (um-para-muitos)
+            modelBuilder.Entity<Usuario>()
+                .HasMany(u => u.Pedidos)
+                .WithOne(p => p.Usuario)
+                .HasForeignKey(p => p.UsuarioId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Lojista → Loja (um-para-muitos)
-            modelBuilder.Entity<Lojista>()
-                .HasMany(l => l.Lojas)
-                .WithOne(lo => lo.Lojista)
-                .HasForeignKey(lo => lo.LojistaId)
+            // Usuário → Lojas (um-para-muitos)
+            modelBuilder.Entity<Usuario>()
+                .HasMany(u => u.Lojas)
+                .WithOne(l => l.Usuario)
+                .HasForeignKey(l => l.UsuarioId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Loja → Endereços (um-para-muitos)
@@ -97,14 +79,14 @@ namespace VitrineExpress.Data
                 .HasForeignKey(e => e.LojaId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Loja → Produto (um-para-muitos)
+            // Loja → Produtos (um-para-muitos)
             modelBuilder.Entity<Loja>()
                 .HasMany(l => l.Produtos)
                 .WithOne(p => p.Loja)
                 .HasForeignKey(p => p.LojaId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Loja → Pedido (um-para-muitos)
+            // Loja → Pedidos (um-para-muitos)
             modelBuilder.Entity<Loja>()
                 .HasMany(l => l.Pedidos)
                 .WithOne(p => p.Loja)

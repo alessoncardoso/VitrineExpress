@@ -31,9 +31,9 @@ namespace VitrineExpress.Models
         public required string Cep { get; set; }
 
         [Required]
-        public int ClienteId { get; set; }
+        public int UsuarioId { get; set; }
 
-        public Cliente? Cliente { get; set; }
+        public Usuario? Usuario { get; set; }
 
         [Required]
         public int LojaId { get; set; }

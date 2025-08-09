@@ -27,10 +27,10 @@ namespace VitrineExpress.Models
         public string? Telefone { get; set; }
 
         [Range(0, double.MaxValue)]
-        public double TaxaEntrega { get; set; }
+        public double? TaxaEntrega { get; set; }
 
         [Range(0, double.MaxValue)]
-        public double ValorMinimoPedido { get; set; }
+        public double? ValorMinimoPedido { get; set; }
 
         [NotMapped]
         public Dictionary<string, string> HorarioFuncionamento { get; set; } = new();
@@ -39,9 +39,9 @@ namespace VitrineExpress.Models
         public bool EntregaDisponivel { get; set; }
 
         [Required]
-        public int LojistaId { get; set; }
+        public int UsuarioId { get; set; }
 
-        public Lojista? Lojista { get; set; }
+        public Usuario? Usuario { get; set; }
 
         [Required]
         public StatusLoja StatusAtual { get; set; }

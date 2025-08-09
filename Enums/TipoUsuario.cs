@@ -2,6 +2,7 @@
 {
     public enum TipoUsuario
     {
+        ADMIN,
         CLIENTE,
         LOJISTA
     }

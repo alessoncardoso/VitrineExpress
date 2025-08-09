@@ -10,9 +10,9 @@ namespace VitrineExpress.Models
         public decimal ValorTotal { get; set; }
 
         [Required]
-        public int ClienteId { get; set; }
+        public int UsuarioId { get; set; }
 
-        public Cliente? Cliente { get; set; }
+        public Usuario? Usuario { get; set; }
 
         public ICollection<ItemCarrinho> ItensCarrinho { get; set; } = new List<ItemCarrinho>();
     }

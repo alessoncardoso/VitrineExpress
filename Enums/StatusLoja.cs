@@ -3,6 +3,7 @@
     public enum StatusLoja
     {
         ABERTA,
-        FECHADA
+        FECHADA,
+        PAUSADA
     }
 }

@@ -25,7 +25,18 @@ namespace VitrineExpress.Models
         [StringLength(255)]
         public required string Senha { get; set; }
 
-        public Cliente? Cliente { get; set; }
-        public Lojista? Lojista { get; set; }
+        [StringLength(14, ErrorMessage = "O CPF deve conter no máximo 14 caracteres.")]
+        public string? Cpf { get; set; }      // Para Cliente
+
+        [StringLength(18, ErrorMessage = "O CNPJ deve conter no máximo 18 caracteres.")]
+        public string? Cnpj { get; set; }     // Para Lojista
+
+        [Required]
+        public TipoUsuario TipoUsuario { get; set; }
+
+        public ICollection<Loja>? Lojas { get; set; } = new List<Loja>();
+        public ICollection<Endereco>? Enderecos { get; set; } = new List<Endereco>();
+        public ICollection<Carrinho>? Carrinhos { get; set; } = new List<Carrinho>();
+        public ICollection<Pedido>? Pedidos { get; set; } = new List<Pedido>();
     }
 }
