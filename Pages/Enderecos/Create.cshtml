@@ -2,66 +2,156 @@
 @model VitrineExpress.Pages.Enderecos.CreateModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Novo Endereço";
 }
 
-<h1>Create</h1>
+<div class="container py-4">
+    <header class="d-flex justify-content-between align-items-start align-items-md-center flex-column flex-md-row gap-3 mb-4">
+        <div>
+            <h1 class="h3 mb-1">Novo Endereço</h1>
+            <p class="text-secondary mb-0">Cadastre um endereço para entregas e retiradas.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-page="Index" class="btn btn-outline-secondary">
+                Voltar para a lista
+            </a>
+        </div>
+    </header>
 
-<h4>Endereco</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Endereco.Rua" class="control-label"></label>
-                <input asp-for="Endereco.Rua" class="form-control" />
-                <span asp-validation-for="Endereco.Rua" class="text-danger"></span>
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <form method="post" novalidate>
+                        @Html.AntiForgeryToken()
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="mb-4">
+                            <h6 class="text-uppercase text-muted small mb-3">Localização</h6>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <div class="form-floating flex-grow-1">
+                                            <input asp-for="Endereco.Cep" class="form-control" placeholder="00000-000" inputmode="numeric" />
+                                            <label asp-for="Endereco.Cep">CEP</label>
+                                        </div>
+                                        <button type="button" id="btnBuscarCep" class="btn btn-outline-primary">Buscar CEP</button>
+                                    </div>
+                                    <span asp-validation-for="Endereco.Cep" class="text-danger small"></span>
+                                    <div id="cepHelp" class="form-text">Digite o CEP e clique em "Buscar CEP" para preencher o endereço automaticamente.</div>
+                                </div>
+
+                                <div class="col-md-8">
+                                    <div class="form-floating">
+                                        <input asp-for="Endereco.Rua" class="form-control" placeholder="Avenida Exemplo" />
+                                        <label asp-for="Endereco.Rua">Rua</label>
+                                    </div>
+                                    <span asp-validation-for="Endereco.Rua" class="text-danger small"></span>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-floating">
+                                        <input asp-for="Endereco.Numero" class="form-control" placeholder="123" />
+                                        <label asp-for="Endereco.Numero">Número</label>
+                                    </div>
+                                    <span asp-validation-for="Endereco.Numero" class="text-danger small"></span>
+                                </div>
+
+                                <div class="row g-2">
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input asp-for="Endereco.Bairro" class="form-control" placeholder="Centro" />
+                                            <label asp-for="Endereco.Bairro">Bairro</label>
+                                        </div>
+                                        <span asp-validation-for="Endereco.Bairro" class="text-danger small"></span>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-floating">
+                                            <input asp-for="Endereco.Cidade" class="form-control" placeholder="São Paulo" />
+                                            <label asp-for="Endereco.Cidade">Cidade</label>
+                                        </div>
+                                        <span asp-validation-for="Endereco.Cidade" class="text-danger small"></span>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <div class="form-floating">
+                                            <input asp-for="Endereco.Estado" class="form-control" maxlength="2" placeholder="SP" />
+                                            <label asp-for="Endereco.Estado">UF</label>
+                                        </div>
+                                        <span asp-validation-for="Endereco.Estado" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">Salvar endereço</button>
+                            <a asp-page="Index" class="btn btn-light border">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Endereco.Numero" class="control-label"></label>
-                <input asp-for="Endereco.Numero" class="form-control" />
-                <span asp-validation-for="Endereco.Numero" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Endereco.Bairro" class="control-label"></label>
-                <input asp-for="Endereco.Bairro" class="form-control" />
-                <span asp-validation-for="Endereco.Bairro" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Endereco.Cidade" class="control-label"></label>
-                <input asp-for="Endereco.Cidade" class="form-control" />
-                <span asp-validation-for="Endereco.Cidade" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Endereco.Estado" class="control-label"></label>
-                <input asp-for="Endereco.Estado" class="form-control" />
-                <span asp-validation-for="Endereco.Estado" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Endereco.Cep" class="control-label"></label>
-                <input asp-for="Endereco.Cep" class="form-control" />
-                <span asp-validation-for="Endereco.Cep" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Endereco.ClienteId" class="control-label"></label>
-                <select asp-for="Endereco.ClienteId" class ="form-control" asp-items="ViewBag.ClienteId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Endereco.LojaId" class="control-label"></label>
-                <select asp-for="Endereco.LojaId" class ="form-control" asp-items="ViewBag.LojaId"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+
+            <p class="text-muted small mt-2 mb-0">Ao salvar, seus dados serão validados. Campos obrigatórios devem estar preenchidos corretamente.</p>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-page="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        (function () {
+            const byId = (id) => document.getElementById(id);
+            const rua = byId('Endereco_Rua');
+            const numero = byId('Endereco_Numero');
+            const bairro = byId('Endereco_Bairro');
+            const cidade = byId('Endereco_Cidade');
+            const estado = byId('Endereco_Estado');
+            const cep = byId('Endereco_Cep');
+
+            function formatCEP(value) {
+                const digits = (value || '').replace(/\D/g, '').slice(0, 8);
+                return digits.length > 5 ? digits.slice(0,5) + '-' + digits.slice(5) : digits;
+            }
+            if (cep) {
+                cep.addEventListener('input', function () {
+                    this.value = formatCEP(this.value);
+                });
+            }
+
+            const btnBuscarCep = byId('btnBuscarCep');
+            if (btnBuscarCep && cep) {
+                btnBuscarCep.addEventListener('click', async function () {
+                    const rawCep = (cep.value || '').replace(/\D/g, '');
+                    if (rawCep.length !== 8) {
+                        alert('Informe um CEP válido (8 dígitos).');
+                        return;
+                    }
+                    try {
+                        btnBuscarCep.disabled = true;
+                        btnBuscarCep.textContent = 'Buscando...';
+                        const resp = await fetch('https://viacep.com.br/ws/' + rawCep + '/json/');
+                        const data = await resp.json();
+                        if (data.erro) {
+                            alert('CEP não encontrado.');
+                        } else {
+                            if (rua && data.logradouro) rua.value = data.logradouro;
+                            if (bairro && data.bairro) bairro.value = data.bairro;
+                            if (cidade && data.localidade) cidade.value = data.localidade;
+                            if (estado && data.uf) estado.value = data.uf;
+                        }
+                    } catch (e) {
+                        alert('Ocorreu um erro ao buscar o CEP.');
+                    } finally {
+                        btnBuscarCep.disabled = false;
+                        btnBuscarCep.textContent = 'Buscar CEP';
+                    }
+                });
+            }
+        })();
+    </script>
 }

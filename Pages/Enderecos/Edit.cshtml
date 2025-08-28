@@ -2,69 +2,126 @@
 @model VitrineExpress.Pages.Enderecos.EditModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar endereço";
 }
 
-<h1>Edit</h1>
+<div class="container py-4">
+    <header class="page-header rounded-3 p-4 mb-4">
+        <div>
+            <h1 class="h4 mb-1">Editar endereço</h1>
+            <p class="text-muted mb-0">Atualize os dados do endereço.</p>
+        </div>
+    </header>
 
-<h4>Endereco</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Endereco.Id" />
-            <div class="form-group">
-                <label asp-for="Endereco.Rua" class="control-label"></label>
-                <input asp-for="Endereco.Rua" class="form-control" />
-                <span asp-validation-for="Endereco.Rua" class="text-danger"></span>
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="Endereco.Id" />
+                        <input type="hidden" asp-for="Endereco.UsuarioId" />
+                        <input type="hidden" asp-for="Endereco.LojaId" />
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input type="text" value="@Model.Nome" class="form-control" readonly />
+                                    @if (User.IsInRole("ADMIN"))
+                                    {
+                                        <label>Administrador</label>
+                                    }                              
+                                    @if (User.IsInRole("LOJISTA"))
+									{
+										<label>Lojista</label>
+									}
+									else
+									{
+										<label>Cliente</label>
+									}
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-8">
+                                <div class="form-floating">
+                                    <input asp-for="Endereco.Rua" class="form-control" placeholder="Rua" />
+                                    <label asp-for="Endereco.Rua"></label>
+                                </div>
+                                <span class="text-danger small" asp-validation-for="Endereco.Rua"></span>
+                            </div>
+
+                            <div class="col-12 col-md-4">
+                                <div class="form-floating">
+                                    <input asp-for="Endereco.Numero" class="form-control" placeholder="Número" />
+                                    <label asp-for="Endereco.Numero"></label>
+                                </div>
+                                <span class="text-danger small" asp-validation-for="Endereco.Numero"></span>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Endereco.Bairro" class="form-control" placeholder="Bairro" />
+                                    <label asp-for="Endereco.Bairro"></label>
+                                </div>
+                                <span class="text-danger small" asp-validation-for="Endereco.Bairro"></span>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Endereco.Cidade" class="form-control" placeholder="Cidade" />
+                                    <label asp-for="Endereco.Cidade"></label>
+                                </div>
+                                <span class="text-danger small" asp-validation-for="Endereco.Cidade"></span>
+                            </div>
+
+                            <div class="col-6 col-md-6">
+                                <div class="form-floating">
+                                    <select asp-for="Endereco.Estado" class="form-select" asp-items="Model.Estados">
+                                        <option value="" disabled selected>Selecione...</option>
+                                    </select>
+                                    <label asp-for="Endereco.Estado"></label>
+                                </div>
+                                <span class="text-danger small" asp-validation-for="Endereco.Estado"></span>
+                            </div>
+
+                            <div class="col-6 col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Endereco.Cep" class="form-control" placeholder="00000-000" />
+                                    <label asp-for="Endereco.Cep"></label>
+                                </div>
+                                <span class="text-danger small" asp-validation-for="Endereco.Cep"></span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-2 mt-4">
+                            @if (User.IsInRole("ADMIN"))
+                            {
+                                <button type="submit" class="btn btn-primary">Salvar alterações</button>
+                                <a asp-page="./Index" class="btn btn-outline-secondary">Cancelar</a>
+                            }
+							else
+							{
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-check-circle me-2"></i>
+                                    Atualizar Endereço
+                                </button>
+                                <a asp-page="/Account/Manage/Index" class="btn btn-outline-secondary">
+                                    <i class="bi bi-x-circle me-2"></i>
+                                    Cancelar
+                                </a>
+							}
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Endereco.Numero" class="control-label"></label>
-                <input asp-for="Endereco.Numero" class="form-control" />
-                <span asp-validation-for="Endereco.Numero" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Endereco.Bairro" class="control-label"></label>
-                <input asp-for="Endereco.Bairro" class="form-control" />
-                <span asp-validation-for="Endereco.Bairro" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Endereco.Cidade" class="control-label"></label>
-                <input asp-for="Endereco.Cidade" class="form-control" />
-                <span asp-validation-for="Endereco.Cidade" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Endereco.Estado" class="control-label"></label>
-                <input asp-for="Endereco.Estado" class="form-control" />
-                <span asp-validation-for="Endereco.Estado" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Endereco.Cep" class="control-label"></label>
-                <input asp-for="Endereco.Cep" class="form-control" />
-                <span asp-validation-for="Endereco.Cep" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Endereco.ClienteId" class="control-label"></label>
-                <select asp-for="Endereco.ClienteId" class="form-control" asp-items="ViewBag.ClienteId"></select>
-                <span asp-validation-for="Endereco.ClienteId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Endereco.LojaId" class="control-label"></label>
-                <select asp-for="Endereco.LojaId" class="form-control" asp-items="ViewBag.LojaId"></select>
-                <span asp-validation-for="Endereco.LojaId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-page="./Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

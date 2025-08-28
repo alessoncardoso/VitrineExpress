@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using VitrineExpress.Models;
 
 namespace VitrineExpress.Data
 {
     public class VitrineContext : DbContext
     {
-        public VitrineContext (DbContextOptions<VitrineContext> options)
+        public VitrineContext(DbContextOptions<VitrineContext> options)
             : base(options)
         {
         }
@@ -56,14 +52,14 @@ namespace VitrineExpress.Data
                 .HasMany(u => u.Carrinhos)
                 .WithOne(c => c.Usuario)
                 .HasForeignKey(c => c.UsuarioId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Usuário → Pedidos (um-para-muitos)
             modelBuilder.Entity<Usuario>()
                 .HasMany(u => u.Pedidos)
                 .WithOne(p => p.Usuario)
                 .HasForeignKey(p => p.UsuarioId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Usuário → Lojas (um-para-muitos)
             modelBuilder.Entity<Usuario>()
@@ -120,6 +116,13 @@ namespace VitrineExpress.Data
                 .WithOne(ip => ip.Produto)
                 .HasForeignKey(ip => ip.ProdutoId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // Carrinho → Pedido (um-para-um)
+            modelBuilder.Entity<Carrinho>()
+               .HasOne(c => c.Pedido)
+               .WithOne(p => p.Carrinho)
+               .HasForeignKey<Pedido>(p => p.CarrinhoId)
+               .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

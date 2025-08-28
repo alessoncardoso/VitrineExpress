@@ -8,23 +8,25 @@ using Microsoft.EntityFrameworkCore;
 using VitrineExpress.Data;
 using VitrineExpress.Models;
 
-namespace VitrineExpress.Pages.Clientes
+namespace VitrineExpress.Pages.Pedidos
 {
-    public class IndexModel : PageModel
+    public class ListModel : PageModel
     {
         private readonly VitrineExpress.Data.VitrineContext _context;
 
-        public IndexModel(VitrineExpress.Data.VitrineContext context)
+        public ListModel(VitrineExpress.Data.VitrineContext context)
         {
             _context = context;
         }
 
-        public IList<Cliente> Cliente { get;set; } = default!;
+        public IList<Pedido> Pedido { get;set; } = default!;
 
         public async Task OnGetAsync()
         {
-            Cliente = await _context.Clientes
-                .Include(c => c.Usuario).ToListAsync();
+            Pedido = await _context.Pedidos
+                .Include(p => p.Carrinho)
+                .Include(p => p.Loja)
+                .Include(p => p.Usuario).ToListAsync();
         }
     }
 }

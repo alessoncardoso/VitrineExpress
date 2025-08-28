@@ -1,50 +1,98 @@
 ﻿@page
 @model VitrineExpress.Pages.Usuarios.EditModel
+@using System.Linq
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar perfil";
+    var nome = Model.Usuario?.Nome ?? "";
+    var partes = nome.Split(' ', System.StringSplitOptions.RemoveEmptyEntries);
+    var iniciais = partes.Length > 0
+        ? string.Join("", partes.Take(2).Select(p => p[0])).ToUpperInvariant()
+        : "U";
 }
 
-<h1>Edit</h1>
+<div class="container py-4">
+    <header class="profile-header rounded-3 p-4 mb-4">
+        <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
+            <div class="d-flex align-items-center gap-3">
+                <div class="avatar" aria-hidden="true">@iniciais</div>
+                <div>
+                    <h1 class="h4 mb-1">Editar perfil</h1>
+                    <p class="text-muted mb-0">Atualize suas informações pessoais e de contato.</p>
+                </div>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <a asp-page="./Details" asp-route-id="@Model.Usuario?.Id" class="btn btn-outline-secondary">Cancelar</a>
+                <a asp-page="./Index" class="btn btn-outline-light border">Voltar para a lista</a>
+            </div>
+        </div>
+    </header>
 
-<h4>Usuario</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Usuario.Id" />
-            <div class="form-group">
-                <label asp-for="Usuario.Nome" class="control-label"></label>
-                <input asp-for="Usuario.Nome" class="form-control" />
-                <span asp-validation-for="Usuario.Nome" class="text-danger"></span>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h2 class="h6 mb-0">Informações pessoais</h2>
             </div>
-            <div class="form-group">
-                <label asp-for="Usuario.Email" class="control-label"></label>
-                <input asp-for="Usuario.Email" class="form-control" />
-                <span asp-validation-for="Usuario.Email" class="text-danger"></span>
+            <div class="card-body">
+                <form method="post" novalidate>
+                    <input type="hidden" asp-for="Usuario.Id" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <div class="form-floating">
+                                <input asp-for="Usuario.Nome" class="form-control" placeholder="Nome completo" autocomplete="name" />
+                                <label asp-for="Usuario.Nome"></label>
+                            </div>
+                            <span class="text-danger small" asp-validation-for="Usuario.Nome"></span>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <div class="form-floating">
+                                <input asp-for="Usuario.Email" type="email" class="form-control" placeholder="email@exemplo.com" autocomplete="email" />
+                                <label asp-for="Usuario.Email"></label>
+                            </div>
+                            <span class="text-danger small" asp-validation-for="Usuario.Email"></span>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <div class="form-floating">
+                                <input asp-for="Usuario.Telefone" type="tel" class="form-control" placeholder="(00) 00000-0000" autocomplete="tel" />
+                                <label asp-for="Usuario.Telefone"></label>
+                            </div>
+                            <span class="text-danger small" asp-validation-for="Usuario.Telefone"></span>
+                        </div>
+                    </div>
+
+                    <div class="card-divider"></div>
+
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <h3 class="h6 mb-2">Segurança</h3>
+                            <p class="form-help mb-2">Por segurança, sua senha não é exibida. Para alterar, informe uma nova senha abaixo.</p>
+                            <div class="form-floating">
+                                <input asp-for="Usuario.Senha" type="password" class="form-control" placeholder="Nova senha" autocomplete="new-password" />
+                                <label asp-for="Usuario.Senha">Nova senha</label>
+                            </div>
+                            <span class="text-danger small" asp-validation-for="Usuario.Senha"></span>
+                            <div class="form-text">Utilize ao menos 8 caracteres, misturando letras e números.</div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary">Salvar alterações</button>
+                        <a asp-page="./Details" asp-route-id="@Model.Usuario?.Id" class="btn btn-outline-secondary">Cancelar</a>
+                    </div>
+
+                    @Html.AntiForgeryToken()
+                </form>
             </div>
-            <div class="form-group">
-                <label asp-for="Usuario.Telefone" class="control-label"></label>
-                <input asp-for="Usuario.Telefone" class="form-control" />
-                <span asp-validation-for="Usuario.Telefone" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Usuario.Senha" class="control-label"></label>
-                <input asp-for="Usuario.Senha" class="form-control" />
-                <span asp-validation-for="Usuario.Senha" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-page="./Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

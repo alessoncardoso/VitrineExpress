@@ -2,42 +2,102 @@
 @model VitrineExpress.Pages.ItensPedido.DetailsModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalhes do item do pedido";
+
+    var ip = Model.ItemPedido;
+    var qtd = ip?.Quantidade ?? 0;
+    var preco = ip?.PrecoUnitario ?? 0m;
+    var subtotal = qtd * preco;
 }
 
-<h1>Details</h1>
+<div class="container py-4">
+    @if (ip is null)
+    {
+        <div class="empty-state rounded-3 p-5 text-center">
+            <h1 class="h5 mb-2">Item do pedido não encontrado</h1>
+            <p class="text-muted mb-4">Não foi possível carregar as informações deste item.</p>
+            <a asp-page="./Index" class="btn btn-outline-secondary">Voltar para a lista</a>
+        </div>
+    }
+    else
+    {
+        <header class="page-header rounded-3 p-4 mb-4">
+            <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
+                <div>
+                    <h1 class="h4 mb-1">Item do pedido #@ip.Id</h1>
+                    <p class="mb-0 text-muted">
+                        Quantidade: <strong>@qtd</strong>
+                        <span class="mx-2">•</span>
+                        Preço unitário: <strong>@string.Format("{0:C}", preco)</strong>
+                        <span class="mx-2">•</span>
+                        Subtotal: <strong class="price">@string.Format("{0:C}", subtotal)</strong>
+                    </p>
+                </div>
+                <div class="d-flex flex-wrap gap-2">
+                    <a asp-page="./Edit" asp-route-id="@ip.Id" class="btn btn-primary">Editar</a>
+                    <a asp-page="./Index" class="btn btn-outline-secondary">Voltar</a>
+                    <a asp-page="./Delete" asp-route-id="@ip.Id" class="btn btn-outline-danger">Excluir</a>
+                </div>
+            </div>
+        </header>
 
-<div>
-    <h4>ItemPedido</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ItemPedido.Quantidade)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ItemPedido.Quantidade)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ItemPedido.PrecoUnitario)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ItemPedido.PrecoUnitario)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ItemPedido.Pedido)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ItemPedido.Pedido.Id)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ItemPedido.Produto)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ItemPedido.Produto.Id)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-page="./Edit" asp-route-id="@Model.ItemPedido.Id">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
+        <div class="row g-4">
+            <div class="col-12 col-lg-6">
+                <div class="card h-100">
+                    <div class="card-header bg-white">
+                        <h2 class="h6 mb-0">Resumo</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <div class="text-muted small mb-1">Quantidade</div>
+                                <div>@qtd</div>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-muted small mb-1">Preço unitário</div>
+                                <div class="price h6 mb-0">@string.Format("{0:C}", preco)</div>
+                            </div>
+                        </div>
+
+                        <div class="card-divider"></div>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="text-muted">Subtotal</div>
+                            <div class="price h5 mb-0">@string.Format("{0:C}", subtotal)</div>
+                        </div>
+
+                        <div class="mt-3 small text-muted">
+                            O subtotal considera a multiplicação de quantidade por preço unitário.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-6">
+                <div class="card h-100">
+                    <div class="card-header bg-white">
+                        <h2 class="h6 mb-0">Informações</h2>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex gap-3">
+                            <div class="info-key">Pedido</div>
+                            <div class="info-value">
+                                @(ip.Pedido?.Id.ToString() ?? "—")
+                            </div>
+                        </li>
+                        <li class="list-group-item d-flex gap-3">
+                            <div class="info-key">Produto</div>
+                            <div class="info-value">
+                                @(ip.Produto?.Id.ToString() ?? "—")
+                            </div>
+                        </li>
+                        <li class="list-group-item d-flex gap-3">
+                            <div class="info-key">ID do item</div>
+                            <div class="info-value">#@ip.Id</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
 </div>

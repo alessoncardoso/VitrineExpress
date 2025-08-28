@@ -24,7 +24,7 @@ namespace VitrineExpress.Pages.Pedidos
         public async Task OnGetAsync()
         {
             Pedido = await _context.Pedidos
-                .Include(p => p.Cliente)
+                .Include(p => p.Usuario)
                 .Include(p => p.Loja).ToListAsync();
         }
     }

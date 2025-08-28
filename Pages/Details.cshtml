@@ -1,0 +1,51 @@
+﻿@page
+@model VitrineExpress.Pages.DetailsModel
+@{
+}
+
+<section class="container py-4">
+    <header class="d-flex align-items-center justify-content-between mb-3">
+        <h2 class="h5 mb-0">Meu Carrinho</h2>
+        @if (Model.CarrinhoAtual != null && Model.ItensCarrinho.Any())
+        {
+            <div class="fw-semibold">
+                Total: @string.Format("{0:C}", Model.CarrinhoAtual.ValorTotal)
+            </div>
+        }
+    </header>
+
+    @if (Model.ItensCarrinho == null || !Model.ItensCarrinho.Any())
+    {
+        <div class="text-center text-muted py-5">Seu carrinho está vazio.</div>
+    }
+    else
+    {
+        <div class="list-group">
+            @foreach (var item in Model.ItensCarrinho)
+            {
+                <div class="list-group-item d-flex align-items-center">
+                    <img src="@(string.IsNullOrWhiteSpace(item.Produto?.ImagemUrl)
+                        ? "https://via.placeholder.com/80"
+                        : item.Produto.ImagemUrl)"
+                         alt="@item.Produto?.Nome"
+                         class="me-3 rounded"
+                         style="width: 80px; height: 80px; object-fit: cover;" />
+
+                    <div class="flex-grow-1">
+                        <div class="fw-semibold">@item.Produto?.Nome</div>
+                        <div class="text-muted">
+                            @item.Quantidade x @string.Format("{0:C}", item.PrecoUnitario)
+                        </div>
+                    </div>
+
+                    <form method="post"
+                          asp-page-handler="RemoverDoCarrinho"
+                          class="ms-3">
+                        <input type="hidden" name="id" value="@item.Id" />
+                        <button class="btn btn-sm btn-outline-danger">Remover</button>
+                    </form>
+                </div>
+            }
+        </div>
+    }
+</section>

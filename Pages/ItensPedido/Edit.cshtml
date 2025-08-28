@@ -2,49 +2,89 @@
 @model VitrineExpress.Pages.ItensPedido.EditModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar item do pedido";
+
+    var ip = Model.ItemPedido;
 }
 
-<h1>Edit</h1>
+<div class="container py-4">
+    <header class="page-header rounded-3 p-4 mb-4">
+        <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
+            <div>
+                <h1 class="h4 mb-1">Editar item do pedido</h1>
+                <p class="text-muted mb-0">Atualize quantidade, pedido, produto e preço unitário.</p>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <a asp-page="./Details" asp-route-id="@Model.ItemPedido?.Id" class="btn btn-outline-secondary">Cancelar</a>
+                <a asp-page="./Index" class="btn btn-outline-light border">Voltar para a lista</a>
+            </div>
+        </div>
+    </header>
 
-<h4>ItemPedido</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="ItemPedido.Id" />
-            <div class="form-group">
-                <label asp-for="ItemPedido.Quantidade" class="control-label"></label>
-                <input asp-for="ItemPedido.Quantidade" class="form-control" />
-                <span asp-validation-for="ItemPedido.Quantidade" class="text-danger"></span>
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h2 class="h6 mb-0">Informações do item</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post" novalidate>
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="ItemPedido.Id" />
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="row g-3">
+                            <div class="col-12 col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="ItemPedido.Quantidade" type="number" min="1" step="1" class="form-control" placeholder="1" />
+                                    <label asp-for="ItemPedido.Quantidade"></label>
+                                </div>
+                                <span class="text-danger small" asp-validation-for="ItemPedido.Quantidade"></span>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="input-group">
+                                    <span class="input-group-text">R$</span>
+                                    <div class="form-floating flex-grow-1">
+                                        <input asp-for="ItemPedido.PrecoUnitario" type="number" step="0.01" min="0" class="form-control" placeholder="0,00" />
+                                        <label asp-for="ItemPedido.PrecoUnitario"></label>
+                                    </div>
+                                </div>
+                                <span class="text-danger small" asp-validation-for="ItemPedido.PrecoUnitario"></span>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="form-floating">
+                                    <select asp-for="ItemPedido.PedidoId" class="form-select" asp-items="ViewBag.PedidoId">
+                                    </select>
+                                    <label asp-for="ItemPedido.PedidoId"></label>
+                                </div>
+                                <span class="text-danger small" asp-validation-for="ItemPedido.PedidoId"></span>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="form-floating">
+                                    <select asp-for="ItemPedido.ProdutoId" class="form-select" asp-items="ViewBag.ProdutoId">
+                                    </select>
+                                    <label asp-for="ItemPedido.ProdutoId"></label>
+                                </div>
+                                <span class="text-danger small" asp-validation-for="ItemPedido.ProdutoId"></span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary">Salvar alterações</button>
+                            <a asp-page="./Details" asp-route-id="@Model.ItemPedido?.Id" class="btn btn-outline-secondary">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="ItemPedido.PrecoUnitario" class="control-label"></label>
-                <input asp-for="ItemPedido.PrecoUnitario" class="form-control" />
-                <span asp-validation-for="ItemPedido.PrecoUnitario" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ItemPedido.PedidoId" class="control-label"></label>
-                <select asp-for="ItemPedido.PedidoId" class="form-control" asp-items="ViewBag.PedidoId"></select>
-                <span asp-validation-for="ItemPedido.PedidoId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ItemPedido.ProdutoId" class="control-label"></label>
-                <select asp-for="ItemPedido.ProdutoId" class="form-control" asp-items="ViewBag.ProdutoId"></select>
-                <span asp-validation-for="ItemPedido.ProdutoId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-page="./Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

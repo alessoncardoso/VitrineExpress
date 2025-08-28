@@ -2,57 +2,160 @@
 @model VitrineExpress.Pages.Pedidos.DeleteModel
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Excluir pedido";
+
+    var p = Model.Pedido;
 }
 
-<h1>Delete</h1>
+<div class="container py-4">
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Pedido</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Pedido.DataPedido)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Pedido.DataPedido)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Pedido.ValorTotal)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Pedido.ValorTotal)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Pedido.Cliente)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Pedido.Cliente.Id)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Pedido.Loja)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Pedido.Loja.Id)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Pedido.StatusPedido)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Pedido.StatusPedido)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Pedido.TipoEntrega)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Pedido.TipoEntrega)
-        </dd>
-    </dl>
-    
-    <form method="post">
-        <input type="hidden" asp-for="Pedido.Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-page="./Index">Back to List</a>
-    </form>
+    @if (p is null)
+    {
+        <div class="empty-state rounded-3 p-5 text-center">
+            <h1 class="h5 mb-2">Pedido não encontrado</h1>
+            <p class="text-muted mb-4">Não foi possível carregar as informações deste pedido.</p>
+            <a asp-page="./Index" class="btn btn-outline-secondary">Voltar para a lista</a>
+        </div>
+    }
+    else
+    {
+        <header class="page-header rounded-3 p-4 mb-4">
+            <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
+                <div>
+                    <h1 class="h4 mb-1">Excluir pedido</h1>
+                    <p class="text-muted mb-0">
+                        Tem certeza que deseja excluir o pedido <strong>#@p.Id</strong>?
+                        Esta ação não pode ser desfeita.
+                    </p>
+                </div>
+                <div class="d-flex flex-wrap gap-2">
+                    <a asp-page="./Details" asp-route-id="@p.Id" class="btn btn-outline-secondary">Cancelar</a>
+                    <a asp-page="./Index" class="btn btn-outline-light border">Voltar para a lista</a>
+                </div>
+            </div>
+        </header>
+
+        <div class="row g-4">
+            <div class="col-12 col-lg-7">
+                <div class="card h-100">
+                    <div class="card-header bg-white">
+                        <h2 class="h6 mb-0">Resumo do pedido</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3 mb-3">
+                            <div class="col-6 col-md-4">
+                                <div class="text-muted small mb-1">Data do pedido</div>
+                                <div>@(p.DataPedido.ToString("g"))</div>
+                            </div>
+                            <div class="col-6 col-md-4">
+                                <div class="text-muted small mb-1">Valor total</div>
+                                <div class="price">@string.Format("{0:C}", p.ValorTotal)</div>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <div class="text-muted small mb-1">Tipo de entrega</div>
+                                <div>
+                                    @if (!string.IsNullOrWhiteSpace(p.TipoEntrega.ToString()))
+                                    {
+                                        <span class="badge badge-outline">@p.TipoEntrega</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">—</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex gap-3">
+                                <div class="info-key">Status</div>
+                                <div class="info-value">
+                                    @if (!string.IsNullOrWhiteSpace(p.StatusPedido.ToString()))
+                                    {
+                                        <span class="badge bg-light text-dark border">@p.StatusPedido</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">—</span>
+                                    }
+                                </div>
+                            </li>
+                            <li class="list-group-item d-flex gap-3">
+                                <div class="info-key">Usuario</div>
+                                <div class="info-value">
+                                    @(p.Usuario?.Id.ToString() ?? "—")
+                                </div>
+                            </li>
+                            <li class="list-group-item d-flex gap-3">
+                                <div class="info-key">Loja</div>
+                                <div class="info-value">
+                                    @(p.Loja?.Id.ToString() ?? "—")
+                                </div>
+                            </li>
+                        </ul>
+
+                        <div class="mt-3 small text-muted">
+                            Verifique se não há dependências (itens do pedido, pagamentos, entregas) antes de excluir.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-5">
+                <div class="card danger-zone h-100">
+                    <div class="card-header bg-white">
+                        <h2 class="h6 mb-0 text-danger">Zona de perigo</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-danger" role="alert">
+                            Ao confirmar, o pedido e seus dados associados poderão ser removidos permanentemente.
+                        </div>
+
+                        <form method="post" novalidate class="mt-3">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" asp-for="Pedido.Id" />
+
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="confirmDelete" />
+                                <label class="form-check-label" for="confirmDelete">
+                                    Eu entendo as consequências desta ação.
+                                </label>
+                            </div>
+
+                            <div class="d-grid d-sm-flex gap-2">
+                                <button id="deleteBtn" type="submit" class="btn btn-danger" disabled>
+                                    Excluir definitivamente
+                                </button>
+                                <a asp-page="./Details" asp-route-id="@p.Id" class="btn btn-outline-secondary">
+                                    Cancelar
+                                </a>
+                            </div>
+
+                            <div class="form-text mt-2">
+                                Você precisa marcar a confirmação acima para prosseguir.
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        (function () {
+            const checkbox = document.getElementById('confirmDelete');
+            const btn = document.getElementById('deleteBtn');
+            if (checkbox && btn) {
+                checkbox.addEventListener('change', function () {
+                    btn.disabled = !this.checked;
+                });
+            }
+        })();
+    </script>
+}

@@ -2,30 +2,77 @@
 @model VitrineExpress.Pages.Carrinhos.DetailsModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalhes do carrinho";
+
+    var c = Model.Carrinho;
+    var valor = c?.ValorTotal ?? 0m;
+    var UsuarioId = c?.Usuario?.Id.ToString() ?? "—";
 }
 
-<h1>Details</h1>
+<div class="container py-4">
+    @if (c is null)
+    {
+        <div class="empty-state rounded-3 p-5 text-center">
+            <h1 class="h5 mb-2">Carrinho não encontrado</h1>
+            <p class="text-muted mb-4">Não foi possível carregar as informações deste carrinho.</p>
+            <a asp-page="./Index" class="btn btn-outline-secondary">Voltar para a lista</a>
+        </div>
+    }
+    else
+    {
+        <header class="page-header rounded-3 p-4 mb-4">
+            <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
+                <div>
+                    <h1 class="h4 mb-1">Carrinho #@c.Id</h1>
+                    <p class="mb-0 text-muted">
+                        Usuario: <strong>@UsuarioId</strong>
+                        <span class="mx-2">•</span>
+                        Valor total: <strong class="price">@string.Format("{0:C}", valor)</strong>
+                    </p>
+                </div>
+                <div class="d-flex flex-wrap gap-2">
+                    <a asp-page="./Edit" asp-route-id="@c.Id" class="btn btn-primary">Editar</a>
+                    <a asp-page="./Index" class="btn btn-outline-secondary">Voltar</a>
+                    <a asp-page="./Delete" asp-route-id="@c.Id" class="btn btn-outline-danger">Excluir</a>
+                </div>
+            </div>
+        </header>
 
-<div>
-    <h4>Carrinho</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Carrinho.ValorTotal)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Carrinho.ValorTotal)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Carrinho.Cliente)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Carrinho.Cliente.Id)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-page="./Edit" asp-route-id="@Model.Carrinho.Id">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
+        <div class="row g-4">
+            <div class="col-12 col-lg-6">
+                <div class="card h-100">
+                    <div class="card-header bg-white">
+                        <h2 class="h6 mb-0">Resumo</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="text-muted">Valor total</div>
+                            <div class="price h5 mb-0">@string.Format("{0:C}", valor)</div>
+                        </div>
+                        <div class="mt-3 small text-muted">
+                            O valor total pode ser a soma dos itens do carrinho. Revise os itens para confirmar.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-6">
+                <div class="card h-100">
+                    <div class="card-header bg-white">
+                        <h2 class="h6 mb-0">Informações</h2>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex gap-3">
+                            <div class="info-key">Usuario</div>
+                            <div class="info-value">@UsuarioId</div>
+                        </li>
+                        <li class="list-group-item d-flex gap-3">
+                            <div class="info-key">ID do carrinho</div>
+                            <div class="info-value">#@c.Id</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
 </div>

@@ -1,28 +1,32 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+﻿using System.Globalization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.EntityFrameworkCore;
 using VitrineExpress.Data;
+using VitrineExpress.Enums;
+using VitrineExpress.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddRazorPages();
+// Configuração global de cultura
+var defaultCulture = new CultureInfo("pt-BR");
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    options.DefaultRequestCulture = new RequestCulture(defaultCulture);
+    options.SupportedCultures = new List<CultureInfo> { defaultCulture };
+    options.SupportedUICultures = new List<CultureInfo> { defaultCulture };
+    CultureInfo.DefaultThreadCurrentCulture = defaultCulture;
+    CultureInfo.DefaultThreadCurrentUICulture = defaultCulture;
+});
+
+// Banco de dados
 builder.Services.AddDbContext<VitrineContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("VitrineContext") ?? throw new InvalidOperationException("Connection string 'VitrineContext' not found.")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("VitrineContext")
+        ?? throw new InvalidOperationException("Connection string 'VitrineContext' not found.")));
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-// Configure Identity services
-builder.Services.AddRazorPages(options =>
-{
-    // Exige autenticação para todas as páginas por padrão
-    options.Conventions.AuthorizeFolder("/");
-
-    // Permite acesso anônimo à página de Login e Register
-    options.Conventions.AllowAnonymousToPage("/Account/Login");
-    options.Conventions.AllowAnonymousToPage("/Account/Register");
-});
-
-
-// Configure authentication and authorization
+// Autenticação via Cookie
 builder.Services.AddAuthentication("VitrineCookie")
     .AddCookie("VitrineCookie", options =>
     {
@@ -30,15 +34,63 @@ builder.Services.AddAuthentication("VitrineCookie")
         options.LogoutPath = "/Account/Logout";
     });
 
-builder.Services.AddAuthorization();
+// Autorização com policy para Admin
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy =>
+        policy.RequireRole(TipoUsuario.ADMIN.ToString()));
+
+    options.AddPolicy("CLienteOnly", policy =>
+       policy.RequireRole(TipoUsuario.CLIENTE.ToString()));
+
+    options.AddPolicy("LojistaOnly", policy =>
+       policy.RequireRole(TipoUsuario.LOJISTA.ToString()));
+
+    options.AddPolicy("AdminOrLojista", policy =>
+        policy.RequireRole(
+            TipoUsuario.ADMIN.ToString(),
+            TipoUsuario.LOJISTA.ToString()
+        ));
+});
+
+// Configuração de páginas e restrições
+builder.Services.AddRazorPages(options =>
+{
+    // Exige autenticação para todas as páginas por padrão
+    //options.Conventions.AuthorizeFolder("/");
+
+    // Permite acesso anônimo para login e registro
+    options.Conventions.AllowAnonymousToPage("/Account/Login");
+    options.Conventions.AllowAnonymousToPage("/Account/Register");
+
+    // Restringe o acesso a páginas específicas
+    options.Conventions.AuthorizeFolder("/Usuarios", "AdminOnly");
+
+    options.Conventions.AuthorizeFolder("/Carrinhos/Index", "AdminOnly");
+    options.Conventions.AuthorizeFolder("/Enderecos/Index", "AdminOnly");
+    options.Conventions.AuthorizeFolder("/ItensCarrinho/Index", "AdminOnly");
+    options.Conventions.AuthorizeFolder("/ItensPedido/Index", "AdminOnly");
+    options.Conventions.AuthorizeFolder("/Pedidos/Index", "AdminOnly");
+    options.Conventions.AuthorizeFolder("/Produtos/Index", "AdminOnly");
+
+});
+
+// Registra o serviço de hashing de senha para ser usado na injeção de dependência.
+builder.Services.AddSingleton<IPasswordHasher<Usuario>, PasswordHasher<Usuario>>();
+
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Cultura global
+var localizationOptions = app.Services
+    .GetRequiredService<Microsoft.Extensions.Options.IOptions<RequestLocalizationOptions>>()
+    .Value;
+app.UseRequestLocalization(localizationOptions);
+
+// Pipeline HTTP
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 else
@@ -47,13 +99,15 @@ else
     app.UseMigrationsEndPoint();
 }
 
+// Executa migrations automaticamente
 using (var scope = app.Services.CreateScope())
 {
-    var services = scope.ServiceProvider;
+    var context = scope.ServiceProvider.GetRequiredService<VitrineContext>();
 
-    var context = services.GetRequiredService<VitrineContext>();
-    // context.Database.EnsureCreated();
-    // DbInitializer.Initialize(context);
+    if (app.Environment.IsDevelopment())
+    {
+        context.Database.Migrate();
+    }
 }
 
 app.UseHttpsRedirection();

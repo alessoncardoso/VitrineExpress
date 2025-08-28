@@ -2,53 +2,131 @@
 @model VitrineExpress.Pages.Usuarios.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Usuários";
+
+    var query = Request.Query["q"].ToString();
+    var hasItems = Model.Usuario?.Any() == true;
+    var total = Model.Usuario?.Count() ?? 0;
 }
 
-<h1>Index</h1>
+<div class="container py-4">
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Usuario[0].Nome)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Usuario[0].Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Usuario[0].Telefone)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Usuario[0].Senha)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Usuario) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nome)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Telefone)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Senha)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <header class="page-header py-4 px-4 mb-4 rounded-3">
+        <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
+            <div>
+                <h1 class="h4 mb-1">Usuários</h1>
+                <p class="mb-0 text-muted">Gerencie a lista de usuários cadastrados.</p>
+            </div>
+
+            <div class="d-flex align-items-center gap-3">
+                <span class="text-muted small">
+                    @if (hasItems)
+                    {
+                        <text>@total registro@(total == 1 ? "" : "s")</text>
+                    }
+                    else
+                    {
+                        <text>Nenhum registro</text>
+                    }
+                </span>
+                <a asp-page="Create" class="btn btn-primary">
+                    Criar novo
+                </a>
+            </div>
+        </div>
+    </header>
+
+    @if (!hasItems)
+    {
+        <div class="empty-state rounded-3 p-5 text-center">
+            <h2 class="h5 mb-2">Nada por aqui ainda</h2>
+            <p class="text-muted mb-4">Comece cadastrando um novo usuário.</p>
+            <a asp-page="Create" class="btn btn-primary">Criar primeiro usuário</a>
+        </div>
+    }
+    else
+    {
+        <!-- Mobile Cards -->
+        <div class="d-md-none">
+            <div class="row g-3">
+                @foreach (var item in Model.Usuario!)
+                {
+                    <div class="col-12">
+                        <div class="card usuario-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start gap-3">
+                                    <div>
+                                        <h3 class="h6 mb-1">
+                                            <span class="fw-semibold">Nome:</span>
+                                            <span class="ms-1">@Html.DisplayFor(mi => item.Nome)</span>
+                                        </h3>
+                                        <div class="text-muted small">
+                                            <div>
+                                                <span class="fw-semibold">@Html.DisplayNameFor(m => m.Usuario[0].Email):</span>
+                                                <span class="ms-1">@item.Email</span>
+                                            </div>
+                                            <div>
+                                                <span class="fw-semibold">@Html.DisplayNameFor(m => m.Usuario[0].Telefone):</span>
+                                                <span class="ms-1">@Html.DisplayFor(modelItem => item.Telefone)</span>
+                                            </div>
+                                            <div>
+                                                <span class="fw-semibold">Cpf:</span>
+                                                <span class="ms-1">@Html.DisplayFor(modelItem => @item.Cpf)</span>
+                                            </div>
+                                            <div>
+                                                <span class="fw-semibold">Cnpj:</span>
+                                                <span class="ms-1">@Html.DisplayFor(modelItem => @item.Cnpj)</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-3 d-flex flex-wrap gap-2">
+                                    <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Editar</a>
+                                    <a asp-page="./Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Detalhes</a>
+                                    <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Excluir</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Desktop Table -->
+        <div class="table-responsive d-none d-md-block">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th class="text-nowrap">@Html.DisplayNameFor(model => model.Usuario[0].Nome)</th>
+                        <th class="text-nowrap">@Html.DisplayNameFor(model => model.Usuario[0].Email)</th>
+                        <th class="text-nowrap">@Html.DisplayNameFor(model => model.Usuario[0].TipoUsuario)</th>
+                        <th class="text-nowrap">@Html.DisplayNameFor(model => model.Usuario[0].Telefone)</th>
+                        <th class="text-nowrap">@Html.DisplayNameFor(model => model.Usuario[0].Cpf)</th>
+                        <th class="text-nowrap">@Html.DisplayNameFor(model => model.Usuario[0].Cnpj)</th>
+                        <th class="text-end text-nowrap" style="width:1%;">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Usuario)
+                    {
+                        <tr>
+                            <td class="fw-medium">@Html.DisplayFor(modelItem => item.Nome)</td>
+                            <td><span class="text-muted">@Html.DisplayFor(modelItem => item.Email)</span></td>
+                            <td><span class="text-muted">@Html.DisplayFor(modelItem => item.TipoUsuario)</span></td>
+                            <td><span class="text-muted">@Html.DisplayFor(modelItem => item.Telefone)</span></td>
+                            <td><span class="text-muted">@Html.DisplayFor(modelItem => @item.Cpf)</span></td>
+                            <td><span class="text-muted">@Html.DisplayFor(modelItem => @item.Cnpj)</span></td>
+                            <td class="text-end">
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-outline-primary">Editar</a>
+                                    <a asp-page="./Details" asp-route-id="@item.Id" class="btn btn-outline-secondary">Detalhes</a>
+                                    <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-outline-danger">Excluir</a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

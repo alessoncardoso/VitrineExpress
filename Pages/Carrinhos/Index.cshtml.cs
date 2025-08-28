@@ -24,7 +24,7 @@ namespace VitrineExpress.Pages.Carrinhos
         public async Task OnGetAsync()
         {
             Carrinho = await _context.Carrinhos
-                .Include(c => c.Cliente).ToListAsync();
+                .Include(c => c.Usuario).ToListAsync();
         }
     }
 }

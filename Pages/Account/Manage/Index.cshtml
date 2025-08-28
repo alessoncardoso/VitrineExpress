@@ -1,0 +1,174 @@
+﻿@page
+@model VitrineExpress.Pages.Account.Manage.IndexModel
+@{
+    ViewData["Title"] = "Minha Conta";
+}
+
+<div class="container py-4">
+    <!-- Header -->
+    <div class="row bg-light py-4 px-4 mb-4 rounded-3">
+        <div class="col-12">
+            <div class="d-flex align-items-center mb-2">
+                <div class="bg-primary bg-opacity-10 rounded-circle p-3 me-3">
+                    <i class="bi bi-person-circle text-primary fs-4"></i>
+                </div>
+                <div>
+                    <h1 class="h3 mb-1">@ViewData["Title"]</h1>
+                    <p class="text-muted mb-0">Gerencie suas informações pessoais e configurações</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.StatusMessage))
+    {
+        <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            @Model.StatusMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <!-- Sidebar de navegação -->
+        <div class="col-lg-3 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-light border-0">
+                    <h6 class="mb-0 fw-semibold">
+                        <i class="bi bi-person-gear me-2"></i>
+                        Gerenciar Conta
+                    </h6>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        <a asp-page="./Index" class="list-group-item list-group-item-action border-0 py-3 active text-white">
+                            <i class="bi bi-person me-2"></i>
+                            Perfil
+                        </a>
+                        <a asp-page="./Terms" class="list-group-item list-group-item-action border-0 py-3">
+                            <i class="bi bi-shield-check me-2 text-info"></i>
+                            Termos e Privacidade
+                        </a>
+                        <a asp-page="./ChangePassword" class="list-group-item list-group-item-action border-0 py-3">
+                            <i class="bi bi-key me-2 text-warning"></i>
+                            Alterar Senha
+                        </a>
+                        <a asp-page="./Delete" class="list-group-item list-group-item-action border-0 py-3">
+                            <i class="bi bi-person-x me-2 text-danger"></i>
+                            Excluir Conta
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conteúdo principal -->
+        <div class="col-lg-9">
+            <div class="row">
+                <!-- Card de Dados Pessoais -->
+                <div class="col-12 mb-4">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center py-3">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-person-badge text-primary me-2"></i>
+                                <h5 class="mb-0">Dados Pessoais</h5>
+                            </div>
+                            <a asp-page="./Edit" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-pencil me-1"></i>
+                                Editar
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-person text-muted me-2"></i>
+                                        <div>
+                                            <small class="text-muted d-block">Nome Completo</small>
+                                            <span class="fw-medium">@Model.Nome</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-envelope text-muted me-2"></i>
+                                        <div>
+                                            <small class="text-muted d-block">Email</small>
+                                            <span class="fw-medium">@Model.Email</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card de Endereço -->
+                <div class="col-12 mb-4">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center py-3">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-geo-alt text-primary me-2"></i>
+                                <h5 class="mb-0">Endereço Principal</h5>
+                            </div>
+                            @if (Model.EnderecoPrincipal != null && Model.EnderecoPrincipal.Id > 0)
+                            {
+                                <a asp-page="/Enderecos/Edit"
+                                   asp-route-id="@Model.EnderecoPrincipal.Id"
+                                   class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-pencil me-1"></i> Editar
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-page="/Enderecos/Create"
+                                   asp-route-userId="@Model.UsuarioId"
+                                   class="btn btn-primary btn-sm">
+                                    <i class="bi bi-plus me-1"></i> Adicionar
+                                </a>
+                            }
+                        </div>
+                        <div class="card-body">
+                            @if (Model.EnderecoPrincipal != null && !string.IsNullOrEmpty(Model.EnderecoPrincipal.Rua))
+                            {
+                                var endereco = Model.EnderecoPrincipal;
+                                <div class="d-flex align-items-start">
+                                    <i class="bi bi-house text-muted me-2 mt-1"></i>
+                                    <div>
+                                        <p class="mb-1 fw-medium">@endereco.Rua, @endereco.Numero</p>
+                                        <p class="mb-1 text-muted">@endereco.Bairro</p>
+                                        <p class="mb-0 text-muted">@endereco.Cidade - @endereco.Estado</p>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="text-center py-4">
+                                    <i class="bi bi-house text-muted fs-1 mb-3 d-block"></i>
+                                    <p class="text-muted small m-2">Nenhum endereço cadastrado</p>
+                                    <small class="text-muted">Adicione um endereço para facilitar suas compras</small>
+                                </div>
+                            }
+                        </div>
+                </div>
+
+                <!-- Card informativo -->
+                <div class="col-12 mt-4">
+                    <div class="card border-0 bg-light">
+                        <div class="card-body">
+                            <div class="d-flex align-items-start">
+                                <i class="bi bi-info-circle text-primary me-2 mt-1"></i>
+                                <div>
+                                    <h6 class="mb-1">Dicas de Segurança</h6>
+                                    <small class="text-muted">
+                                        Mantenha suas informações sempre atualizadas e altere sua senha regularmente para maior segurança.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

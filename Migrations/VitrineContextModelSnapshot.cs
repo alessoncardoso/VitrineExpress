@@ -30,6 +30,9 @@ namespace VitrineExpress.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<bool>("Processado")
+                        .HasColumnType("bit");
+
                     b.Property<int>("UsuarioId")
                         .HasColumnType("int");
 
@@ -53,38 +56,32 @@ namespace VitrineExpress.Migrations
 
                     b.Property<string>("Bairro")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Cep")
                         .IsRequired()
-                        .HasMaxLength(9)
-                        .HasColumnType("nvarchar(9)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Cidade")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Estado")
                         .IsRequired()
-                        .HasMaxLength(2)
-                        .HasColumnType("nvarchar(2)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("LojaId")
+                    b.Property<int?>("LojaId")
                         .HasColumnType("int");
 
                     b.Property<string>("Numero")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Rua")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UsuarioId")
+                    b.Property<int?>("UsuarioId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -189,8 +186,8 @@ namespace VitrineExpress.Migrations
                     b.Property<int>("StatusAtual")
                         .HasColumnType("int");
 
-                    b.Property<double?>("TaxaEntrega")
-                        .HasColumnType("float");
+                    b.Property<decimal?>("TaxaEntrega")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Telefone")
                         .HasMaxLength(20)
@@ -199,8 +196,8 @@ namespace VitrineExpress.Migrations
                     b.Property<int>("UsuarioId")
                         .HasColumnType("int");
 
-                    b.Property<double?>("ValorMinimoPedido")
-                        .HasColumnType("float");
+                    b.Property<decimal?>("ValorMinimoPedido")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -216,6 +213,9 @@ namespace VitrineExpress.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CarrinhoId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("DataPedido")
                         .HasColumnType("datetime2");
@@ -236,6 +236,10 @@ namespace VitrineExpress.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CarrinhoId")
+                        .IsUnique()
+                        .HasFilter("[CarrinhoId] IS NOT NULL");
 
                     b.HasIndex("LojaId");
 
@@ -259,7 +263,6 @@ namespace VitrineExpress.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Descricao")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
@@ -270,7 +273,6 @@ namespace VitrineExpress.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("ImagemUrl")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
@@ -349,7 +351,7 @@ namespace VitrineExpress.Migrations
                     b.HasOne("VitrineExpress.Models.Usuario", "Usuario")
                         .WithMany("Carrinhos")
                         .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Usuario");
@@ -360,14 +362,12 @@ namespace VitrineExpress.Migrations
                     b.HasOne("VitrineExpress.Models.Loja", "Loja")
                         .WithMany("Enderecos")
                         .HasForeignKey("LojaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("VitrineExpress.Models.Usuario", "Usuario")
                         .WithMany("Enderecos")
                         .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Loja");
 
@@ -425,6 +425,11 @@ namespace VitrineExpress.Migrations
 
             modelBuilder.Entity("VitrineExpress.Models.Pedido", b =>
                 {
+                    b.HasOne("VitrineExpress.Models.Carrinho", "Carrinho")
+                        .WithOne("Pedido")
+                        .HasForeignKey("VitrineExpress.Models.Pedido", "CarrinhoId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
                     b.HasOne("VitrineExpress.Models.Loja", "Loja")
                         .WithMany("Pedidos")
                         .HasForeignKey("LojaId")
@@ -434,8 +439,10 @@ namespace VitrineExpress.Migrations
                     b.HasOne("VitrineExpress.Models.Usuario", "Usuario")
                         .WithMany("Pedidos")
                         .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Carrinho");
 
                     b.Navigation("Loja");
 
@@ -456,6 +463,8 @@ namespace VitrineExpress.Migrations
             modelBuilder.Entity("VitrineExpress.Models.Carrinho", b =>
                 {
                     b.Navigation("ItensCarrinho");
+
+                    b.Navigation("Pedido");
                 });
 
             modelBuilder.Entity("VitrineExpress.Models.Loja", b =>

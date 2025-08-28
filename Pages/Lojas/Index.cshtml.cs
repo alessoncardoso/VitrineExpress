@@ -24,7 +24,7 @@ namespace VitrineExpress.Pages.Lojas
         public async Task OnGetAsync()
         {
             Loja = await _context.Lojas
-                .Include(l => l.Lojista).ToListAsync();
+                .Include(l => l.Usuario).ToListAsync();
         }
     }
 }

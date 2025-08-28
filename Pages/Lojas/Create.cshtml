@@ -2,82 +2,149 @@
 @model VitrineExpress.Pages.Lojas.CreateModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Criar loja";
 }
 
-<h1>Create</h1>
+<div class="container py-4">
+    <header class="page-header rounded-3 p-4 mb-4">
+        <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
+            <div>
+                <h1 class="h4 mb-1">Criar nova loja</h1>
+                <p class="text-muted mb-0">Cadastre as informações da sua loja.</p>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <a asp-page="./Index" class="btn btn-outline-secondary">Voltar para a lista</a>
+            </div>
+        </div>
+    </header>
 
-<h4>Loja</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Loja.Cnpj" class="control-label"></label>
-                <input asp-for="Loja.Cnpj" class="form-control" />
-                <span asp-validation-for="Loja.Cnpj" class="text-danger"></span>
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h2 class="h6 mb-0">Informações da loja</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data" novalidate>
+                        @Html.AntiForgeryToken()
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="row g-3">
+                            <div class="col-12 col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Loja.Cnpj" class="form-control" placeholder="00.000.000/0000-00" autocomplete="off" />
+                                    <label asp-for="Loja.Cnpj"></label>
+                                </div>
+                                <span class="text-danger small" asp-validation-for="Loja.Cnpj"></span>
+                                <div class="form-text">Informe um CNPJ válido no formato 00.000.000/0000-00.</div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Loja.Nome" class="form-control" placeholder="Nome da loja" autocomplete="organization" />
+                                    <label asp-for="Loja.Nome"></label>
+                                </div>
+                                <span class="text-danger small" asp-validation-for="Loja.Nome"></span>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <textarea asp-for="Loja.Descricao" class="form-control" placeholder="Descrição da loja" style="min-height: 100px;"></textarea>
+                                    <label asp-for="Loja.Descricao"></label>
+                                </div>
+                                <span class="text-danger small" asp-validation-for="Loja.Descricao"></span>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Loja.Telefone" type="tel" class="form-control" placeholder="(00) 00000-0000" autocomplete="tel" />
+                                    <label asp-for="Loja.Telefone"></label>
+                                </div>
+                                <span class="text-danger small" asp-validation-for="Loja.Telefone"></span>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="">
+                                    <input asp-for="ImagemUpload" type="file" class="form-control py-3" accept="image/*" />
+                                    <span asp-validation-for="ImagemUpload" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6 d-flex flex-wrap align-items-center gap-4">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" asp-for="Loja.RetiradaDisponivel" />
+                                    <label class="form-check-label" asp-for="Loja.RetiradaDisponivel"></label>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input id="chkEntrega" class="form-check-input" asp-for="Loja.EntregaDisponivel" />
+                                    <label class="form-check-label" asp-for="Loja.EntregaDisponivel"></label>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="form-floating">
+                                    <select asp-for="Loja.StatusAtual" class="form-select"
+                                            asp-items="Html.GetEnumSelectList<VitrineExpress.Enums.StatusLoja>()">
+                                        <option value="">Selecione...</option>
+                                    </select>
+                                    <label asp-for="Loja.StatusAtual"></label>
+                                </div>
+                                <span class="text-danger small" asp-validation-for="Loja.StatusAtual"></span>
+                            </div>
+
+                            <div id="camposEntrega" class="row g-3" style="display:none;">
+                                <div class="col-12 col-md-6">
+                                    <div class="input-group">
+                                        <span class="input-group-text">R$</span>
+                                        <div class="form-floating flex-grow-1">
+                                            <input asp-for="Loja.TaxaEntrega" type="number" step="0.01" min="0" class="form-control" placeholder="0,00" autocomplete="off" />
+                                            <label asp-for="Loja.TaxaEntrega"></label>
+                                        </div>
+                                    </div>
+                                    <span class="text-danger small" asp-validation-for="Loja.TaxaEntrega"></span>
+                                </div>
+
+                                <div class="col-12 col-md-6">
+                                    <div class="input-group">
+                                        <span class="input-group-text">R$</span>
+                                        <div class="form-floating flex-grow-1">
+                                            <input asp-for="Loja.ValorMinimoPedido" type="number" step="0.01" min="0" class="form-control" placeholder="0,00" autocomplete="off" />
+                                            <label asp-for="Loja.ValorMinimoPedido"></label>
+                                        </div>
+                                    </div>
+                                    <span class="text-danger small" asp-validation-for="Loja.ValorMinimoPedido"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary">Criar loja</button>
+                            <a asp-page="./Index" class="btn btn-outline-secondary">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Loja.Nome" class="control-label"></label>
-                <input asp-for="Loja.Nome" class="form-control" />
-                <span asp-validation-for="Loja.Nome" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Loja.ImagemUrl" class="control-label"></label>
-                <input asp-for="Loja.ImagemUrl" class="form-control" />
-                <span asp-validation-for="Loja.ImagemUrl" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Loja.Descricao" class="control-label"></label>
-                <input asp-for="Loja.Descricao" class="form-control" />
-                <span asp-validation-for="Loja.Descricao" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Loja.Telefone" class="control-label"></label>
-                <input asp-for="Loja.Telefone" class="form-control" />
-                <span asp-validation-for="Loja.Telefone" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Loja.TaxaEntrega" class="control-label"></label>
-                <input asp-for="Loja.TaxaEntrega" class="form-control" />
-                <span asp-validation-for="Loja.TaxaEntrega" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Loja.ValorMinimoPedido" class="control-label"></label>
-                <input asp-for="Loja.ValorMinimoPedido" class="form-control" />
-                <span asp-validation-for="Loja.ValorMinimoPedido" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Loja.RetiradaDisponivel" /> @Html.DisplayNameFor(model => model.Loja.RetiradaDisponivel)
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Loja.EntregaDisponivel" /> @Html.DisplayNameFor(model => model.Loja.EntregaDisponivel)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="Loja.LojistaId" class="control-label"></label>
-                <select asp-for="Loja.LojistaId" class ="form-control" asp-items="ViewBag.LojistaId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Loja.StatusAtual" class="control-label"></label>
-                <select asp-for="Loja.StatusAtual" class="form-control"></select>
-                <span asp-validation-for="Loja.StatusAtual" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-page="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const chkEntrega = document.getElementById('chkEntrega');
+            const camposEntrega = document.getElementById('camposEntrega');
+
+            function toggleEntrega() {
+                camposEntrega.style.display = chkEntrega.checked ? 'flex' : 'none';
+            }
+
+            chkEntrega.addEventListener('change', toggleEntrega);
+
+            toggleEntrega();
+        });
+    </script>
 }

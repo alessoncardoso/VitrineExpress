@@ -2,56 +2,250 @@
 @model VitrineExpress.Pages.Pedidos.CreateModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Criar Pedido a partir do Carrinho";
 }
 
-<h1>Create</h1>
+@section Styles {
+    <style>
+        .order-header h1 {
+            font-weight: 700;
+        }
 
-<h4>Pedido</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Pedido.DataPedido" class="control-label"></label>
-                <input asp-for="Pedido.DataPedido" class="form-control" />
-                <span asp-validation-for="Pedido.DataPedido" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Pedido.ValorTotal" class="control-label"></label>
-                <input asp-for="Pedido.ValorTotal" class="form-control" />
-                <span asp-validation-for="Pedido.ValorTotal" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Pedido.ClienteId" class="control-label"></label>
-                <select asp-for="Pedido.ClienteId" class ="form-control" asp-items="ViewBag.ClienteId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Pedido.LojaId" class="control-label"></label>
-                <select asp-for="Pedido.LojaId" class ="form-control" asp-items="ViewBag.LojaId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Pedido.StatusPedido" class="control-label"></label>
-                <select asp-for="Pedido.StatusPedido" class="form-control"></select>
-                <span asp-validation-for="Pedido.StatusPedido" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Pedido.TipoEntrega" class="control-label"></label>
-                <select asp-for="Pedido.TipoEntrega" class="form-control"></select>
-                <span asp-validation-for="Pedido.TipoEntrega" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+        .item-row {
+            padding: 16px 0;
+            border-bottom: 1px solid #edf0f3;
+        }
 
-<div>
-    <a asp-page="Index">Back to List</a>
+        .item-thumb {
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
+            overflow: hidden;
+            flex: 0 0 auto;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .item-thumb img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+        .item-title {
+            font-weight: 600;
+        }
+
+        .item-sub {
+            color: #6c757d;
+            font-size: .9rem;
+        }
+
+        .unit-price {
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .status-badge {
+            font-size: 0.8rem;
+        }
+    </style>
+}
+
+<div class="container py-4">
+    <form id="pedido-form" method="post" novalidate>
+        @Html.AntiForgeryToken()
+
+        <header class="order-header mb-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h3 mb-1">Criar Pedido</h1>
+                    <p class="text-muted mb-0">Gerenciar pedido do cliente</p>
+                </div>
+                <div>
+                    <span class="badge bg-info status-badge">Carrinho #@Model.CarrinhoId</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="row g-4">
+            <div class="col-12 col-lg-8">
+                <!-- Itens do Carrinho -->
+                <div class="card mb-4">
+                    <div class="card-header bg-white">
+                        <h2 class="h6 mb-0">Itens do Pedido</h2>
+                    </div>
+                    <div class="card-body">
+                        @if (Model.ItensCarrinho?.Any() == true)
+                        {
+                            foreach (var item in Model.ItensCarrinho)
+                            {
+                                <div class="item-row d-flex align-items-center justify-content-between gap-3">
+                                    <div class="d-flex align-items-center gap-3 flex-grow-1">
+                                        <div class="item-thumb">
+                                            <img src="@(item.Produto?.ImagemUrl ?? "/placeholder.svg")" alt="@item.Produto?.Nome" />
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <div class="item-title">@item.Produto?.Nome</div>
+                                            <div class="item-sub">Código: @item.ProdutoId</div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="text-muted">Qtd: @item.Quantidade</div>
+                                        <div class="unit-price">@item.PrecoUnitario.ToString("C")</div>
+                                        <div class="fw-semibold">@((item.Quantidade * item.PrecoUnitario).ToString("C"))</div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="text-center py-4 text-muted">
+                                <i class="bi bi-cart-x" style="font-size: 2rem;"></i>
+                                <p class="mt-2">Nenhum item no carrinho</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Informações do Pedido -->
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h2 class="h6 mb-0">Informações do Pedido</h2>
+                    </div>
+                    <div class="card-body">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <input type="hidden" asp-for="CarrinhoId" />
+                        <input type="hidden" asp-for="Pedido.ValorTotal" value="@Model.ValorTotalCarrinho" />
+
+                        <div class="row g-3">
+                            <div class="col-12 col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Pedido.DataPedido" type="datetime-local" class="form-control"
+                                           value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+                                    <label asp-for="Pedido.DataPedido"></label>
+                                </div>
+                                <span class="text-danger small" asp-validation-for="Pedido.DataPedido"></span>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Pedido.ValorTotal" class="form-control"
+                                           value="@Model.ValorTotalCarrinho.ToString(System.Globalization.CultureInfo.InvariantCulture)" readonly />
+                                    <label asp-for="Pedido.ValorTotal"></label>
+                                </div>
+                                <span class="text-danger small" asp-validation-for="Pedido.ValorTotal"></span>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="form-floating">
+                                    <select asp-for="Pedido.UsuarioId" class="form-select" asp-items="ViewBag.UsuarioId" required>
+                                        <option value="">Selecione o cliente</option>
+                                    </select>
+                                    <label asp-for="Pedido.UsuarioId"></label>
+                                </div>
+                                <span class="text-danger small" asp-validation-for="Pedido.UsuarioId"></span>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="form-floating">
+                                    <select asp-for="Pedido.LojaId" class="form-select" asp-items="ViewBag.LojaId" required>
+                                        <option value="">Selecione a loja</option>
+                                    </select>
+                                    <label asp-for="Pedido.LojaId"></label>
+                                </div>
+                                <span class="text-danger small" asp-validation-for="Pedido.LojaId"></span>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="form-floating">
+                                    <select asp-for="Pedido.StatusPedido" class="form-select" required>
+                                        <option value="">Selecione o status</option>
+                                        <option value="0">Pendente</option>
+                                        <option value="1">Confirmado</option>
+                                        <option value="2">Em Preparação</option>
+                                        <option value="3">Enviado</option>
+                                        <option value="4">Entregue</option>
+                                        <option value="5">Cancelado</option>
+                                    </select>
+                                    <label asp-for="Pedido.StatusPedido"></label>
+                                </div>
+                                <span class="text-danger small" asp-validation-for="Pedido.StatusPedido"></span>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="form-floating">
+                                    <select asp-for="Pedido.TipoEntrega" class="form-select" required>
+                                        <option value="">Selecione a entrega</option>
+                                        <option value="0">Retirada na Loja</option>
+                                        <option value="1">Entrega Padrão</option>
+                                        <option value="2">Entrega Expressa</option>
+                                    </select>
+                                    <label asp-for="Pedido.TipoEntrega"></label>
+                                </div>
+                                <span class="text-danger small" asp-validation-for="Pedido.TipoEntrega"></span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-4">
+                <!-- Resumo -->
+                <div class="card summary-card">
+                    <div class="card-header bg-white">
+                        <h2 class="h6 mb-0">Resumo do Pedido</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Itens:</span>
+                            <span>@(Model.ItensCarrinho?.Count ?? 0)</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Valor dos Itens:</span>
+                            <span>@Model.ValorTotalCarrinho.ToString("C")</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Frete:</span>
+                            <span>R$ 0,00</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between fw-bold fs-5">
+                            <span>TOTAL:</span>
+                            <span>@Model.ValorTotalCarrinho.ToString("C")</span>
+                        </div>
+
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-check-circle me-2"></i>CRIAR PEDIDO
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hidden inputs para os itens -->
+        <div id="hidden-inputs">
+            @if (Model.ItensCarrinho != null)
+            {
+                for (int i = 0; i < Model.ItensCarrinho.Count; i++)
+                {
+                    <input type="hidden" name="Itens[@i].ProdutoId" value="@Model.ItensCarrinho[i].ProdutoId" />
+                    <input type="hidden" name="Itens[@i].Quantidade" value="@Model.ItensCarrinho[i].Quantidade" />
+                    <input type="hidden" name="Itens[@i].PrecoUnitario" value="@Model.ItensCarrinho[i].PrecoUnitario" />
+                }
+            }
+        </div>
+    </form>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

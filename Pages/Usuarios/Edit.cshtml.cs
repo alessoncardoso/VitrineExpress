@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -43,10 +44,21 @@ namespace VitrineExpress.Pages.Usuarios
         // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
+            // Verifica se o e-mail já existe
+            if (_context.Usuarios.Any(u => u.Email == Usuario.Email && u.Id != Usuario.Id))
+            {
+                ModelState.AddModelError("Usuario.Email", "Este e-mail já está em uso.");
+                return Page();
+            }
+
             if (!ModelState.IsValid)
             {
                 return Page();
             }
+
+            // Cria o hasher e gera o hash da senha
+            var hasher = new PasswordHasher<Usuario>();
+            Usuario.Senha = hasher.HashPassword(Usuario, Usuario.Senha);
 
             _context.Attach(Usuario).State = EntityState.Modified;
 

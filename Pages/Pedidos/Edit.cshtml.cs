@@ -36,7 +36,7 @@ namespace VitrineExpress.Pages.Pedidos
                 return NotFound();
             }
             Pedido = pedido;
-           ViewData["ClienteId"] = new SelectList(_context.Set<Cliente>(), "Id", "Id");
+           ViewData["UsuarioId"] = new SelectList(_context.Set<Usuario>(), "Id", "Id");
            ViewData["LojaId"] = new SelectList(_context.Set<Loja>(), "Id", "Id");
             return Page();
         }

@@ -2,37 +2,478 @@
 @model VitrineExpress.Pages.Carrinhos.CreateModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Criar carrinho (unificado)";
 }
 
-<h1>Create</h1>
+@section Styles {
+    <style>
+        .cart-header h1 {
+            font-weight: 700;
+        }
 
-<h4>Carrinho</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Carrinho.ValorTotal" class="control-label"></label>
-                <input asp-for="Carrinho.ValorTotal" class="form-control" />
-                <span asp-validation-for="Carrinho.ValorTotal" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Carrinho.ClienteId" class="control-label"></label>
-                <select asp-for="Carrinho.ClienteId" class ="form-control" asp-items="ViewBag.ClienteId"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+        .cart-header .count {
+            color: #6c757d;
+        }
 
-<div>
-    <a asp-page="Index">Back to List</a>
+        .item-row {
+            padding: 16px 0;
+            border-bottom: 1px solid #edf0f3;
+        }
+
+        .item-thumb {
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
+            overflow: hidden;
+            flex: 0 0 auto;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .item-thumb img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+        .item-title {
+            font-weight: 600;
+        }
+
+        .item-sub {
+            color: #6c757d;
+            font-size: .9rem;
+        }
+
+        .qty-group {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .qty-btn {
+            width: 28px;
+            height: 28px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            line-height: 1;
+            color: #212529;
+        }
+
+        .qty-input {
+            width: 56px;
+            height: 36px;
+            text-align: center;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+        }
+
+        .unit-price {
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .remove-btn {
+            color: #999;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.25rem;
+        }
+
+            .remove-btn:hover {
+                color: #000;
+            }
+
+        .summary-card .card-header {
+            border-bottom: none;
+        }
+
+        .summary-line {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-top: 1px solid #edf0f3;
+        }
+
+        .summary-muted {
+            color: #6c757d;
+            font-size: .9rem;
+        }
+
+        .total-line {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .btn-dark-lg {
+            background: #222;
+            border-color: #222;
+            padding: .85rem 1.2rem;
+            font-weight: 600;
+            width: 100%;
+        }
+
+            .btn-dark-lg:hover {
+                background: #111;
+                border-color: #111;
+            }
+
+        /* Estilo para carrinho vazio */
+        .empty-cart {
+            text-align: center;
+            padding: 3rem 1rem;
+        }
+
+            .empty-cart i {
+                font-size: 4rem;
+                color: #dee2e6;
+                margin-bottom: 1rem;
+            }
+    </style>
+}
+
+<div class="container py-4">
+    <form id="cart-form" method="post" novalidate>
+        @Html.AntiForgeryToken()
+
+        <header class="cart-header mb-3 d-flex align-items-end justify-content-between">
+            <div>
+                <h1 class="h3 mb-1">Carrinho de compras</h1>
+            </div>
+            <div class="count">
+                <span id="items-count">0</span> itens
+            </div>
+        </header>
+
+        <div class="row g-4">
+            <div class="col-12 col-lg-8">
+                <div class="card mb-3">
+                    <div class="card-body pb-0">
+                        <div id="cart-list">
+                            <!-- Conteúdo será preenchido via JavaScript -->
+                        </div>
+
+                        <div id="empty-cart-message" class="empty-cart" style="display: none;">
+                            <i class="bi bi-cart-x"></i>
+                            <h4 class="text-muted">Seu carrinho está vazio</h4>
+                            <p class="text-muted mb-3">Adicione alguns produtos para continuar</p>
+                            <a asp-page="/Produtos/Catalogo" class="btn btn-primary">
+                                <i class="bi bi-bag me-2"></i>Ver Produtos
+                            </a>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-2 mt-3" id="continue-shopping" style="display: none;">
+                            <a asp-page="/Produtos/Catalogo" class="text-decoration-none">
+                                <i class="bi bi-plus-circle me-1"></i>Adicionar mais itens
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h2 class="h6 mb-0">Dados do carrinho</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label" for="Carrinho_UsuarioId">Usuário</label>
+                            <select class="form-select" id="Carrinho_UsuarioId" name="Carrinho.UsuarioId" asp-items="ViewBag.UsuarioId" required>
+                                <option value="">Selecione um usuário</option>
+                            </select>
+                            <div class="form-text">Associe este carrinho a um usuário.</div>
+                        </div>
+                        <input type="hidden" id="Carrinho_ValorTotal" name="Carrinho.ValorTotal" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-4">
+                <div class="card summary-card">
+                    <div class="card-header bg-white">
+                        <h2 class="h6 mb-0">Resumo</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="summary-line" style="border-top: none;">
+                            <div class="summary-muted">ITENS <span id="summary-items">0</span></div>
+                            <div class="fw-semibold" id="summary-subtotal">R$ 0,00</div>
+                        </div>
+
+                        <div class="summary-line mb-1">
+                            <div class="summary-muted w-100">
+                                <label for="shipping" class="form-label mb-1">FRETE</label>
+                                <select id="shipping" class="form-select">
+                                    <option value="0" data-label="Retirada">Retirada na loja — R$ 0,00</option>
+                                    <option value="20" data-label="Padrão">Entrega Padrão — R$ 20,00</option>
+                                    <option value="50" data-label="Expressa">Entrega Expressa — R$ 50,00</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="summary-line total-line">
+                            <div>TOTAL</div>
+                            <div id="summary-total">R$ 0,00</div>
+                        </div>
+
+                        <div class="d-grid mt-3">
+                            <button type="submit" class="btn btn-dark btn-dark-lg" id="submit-button" disabled>REGISTRAR</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="hidden-inputs"></div>
+    </form>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        (function () {
+            // Estado do carrinho em memória
+            const state = {
+                items: [] // { key, produtoId, nome, sub, img, preco, qtd }
+            };
+
+            // Helpers
+            const $ = (id) => document.getElementById(id);
+            const cartList = $('cart-list');
+            const countEl = $('items-count');
+            const summaryItems = $('summary-items');
+            const summarySubtotal = $('summary-subtotal');
+            const summaryTotal = $('summary-total');
+            const shippingSel = $('shipping');
+            const hiddenInputs = $('hidden-inputs');
+            const valorTotalInput = $('Carrinho_ValorTotal');
+            const emptyCartMessage = $('empty-cart-message');
+            const continueShopping = $('continue-shopping');
+            const submitButton = $('submit-button');
+            const usuarioSelect = $('Carrinho_UsuarioId');
+
+            function fmtBRL(n) {
+                const num = Number(n || 0);
+                return num.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            }
+
+            function parseNum(v) {
+                if (typeof v === 'number') return v;
+                if (typeof v !== 'string') return 0;
+                const s = v.replace(/\s/g, '').replace(/\./g, '').replace(',', '.');
+                const n = Number(s);
+                return Number.isFinite(n) ? n : 0;
+            }
+
+            function subtotal() {
+                return state.items.reduce((acc, it) => acc + (it.preco * it.qtd), 0);
+            }
+
+            function shippingCost() {
+                return parseNum(shippingSel?.value || 0);
+            }
+
+            function recalcSummary() {
+                const sub = subtotal();
+                const ship = shippingCost();
+                const tot = Math.max(0, sub + ship);
+
+                const totalItems = state.items.reduce((a, i) => a + i.qtd, 0);
+                countEl.textContent = String(totalItems);
+                summaryItems.textContent = String(state.items.length);
+                summarySubtotal.textContent = fmtBRL(sub);
+                summaryTotal.textContent = fmtBRL(tot);
+
+                if (valorTotalInput) {
+                    valorTotalInput.value = String(tot.toFixed(2)).replace(',', '.');
+                }
+
+                // Mostrar/ocultar mensagem de carrinho vazio
+                if (state.items.length === 0) {
+                    emptyCartMessage.style.display = 'block';
+                    continueShopping.style.display = 'none';
+                    submitButton.disabled = true;
+                } else {
+                    emptyCartMessage.style.display = 'none';
+                    continueShopping.style.display = 'flex';
+                    submitButton.disabled = false;
+                }
+
+                // Habilitar/desabilitar botão baseado na seleção do usuário
+                updateSubmitButtonState();
+            }
+
+            function updateSubmitButtonState() {
+                const hasItems = state.items.length > 0;
+                const hasUser = usuarioSelect.value !== '';
+                submitButton.disabled = !hasItems || !hasUser;
+            }
+
+            function render() {
+                cartList.innerHTML = '';
+
+                if (state.items.length === 0) {
+                    recalcSummary();
+                    return;
+                }
+
+                state.items.forEach((it) => {
+                    const row = document.createElement('div');
+                    row.className = 'item-row d-flex align-items-center justify-content-between gap-3';
+                    row.dataset.key = it.key;
+                    row.innerHTML = `
+                        <div class="d-flex align-items-center gap-3 flex-grow-1">
+                            <div class="item-thumb">
+                                <img src="${it.img || 'https://via.placeholder.com/96?text=Produto'}" alt="Imagem do produto" />
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="item-title">${it.nome || 'Produto'}</div>
+                                <div class="item-sub">${it.sub || ''}</div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="qty-group">
+                                <button type="button" class="qty-btn" data-action="dec" aria-label="Diminuir">−</button>
+                                <input class="qty-input" type="number" min="1" step="1" value="${it.qtd}" />
+                                <button type="button" class="qty-btn" data-action="inc" aria-label="Aumentar">+</button>
+                            </div>
+                            <div class="unit-price">${fmtBRL(it.preco)}</div>
+                            <a href="#" class="remove-btn" aria-label="Remover" title="Remover">×</a>
+                        </div>
+                    `;
+
+                    const dec = row.querySelector('[data-action="dec"]');
+                    const inc = row.querySelector('[data-action="inc"]');
+                    const qtyInput = row.querySelector('.qty-input');
+                    const remove = row.querySelector('.remove-btn');
+
+                    dec?.addEventListener('click', () => {
+                        it.qtd = Math.max(1, (it.qtd || 1) - 1);
+                        qtyInput.value = String(it.qtd);
+                        recalcSummary();
+                    });
+
+                    inc?.addEventListener('click', () => {
+                        it.qtd = (it.qtd || 1) + 1;
+                        qtyInput.value = String(it.qtd);
+                        recalcSummary();
+                    });
+
+                    qtyInput?.addEventListener('input', () => {
+                        const v = parseInt(qtyInput.value, 10);
+                        it.qtd = Number.isFinite(v) && v > 0 ? v : 1;
+                        qtyInput.value = String(it.qtd);
+                        recalcSummary();
+                    });
+
+                    remove?.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        state.items = state.items.filter(x => x.key !== it.key);
+                        render();
+                        recalcSummary();
+                    });
+
+                    cartList.appendChild(row);
+                });
+
+                recalcSummary();
+            }
+
+            function carregarItensDoLocalStorage() {
+                try {
+                    const carrinhoTemp = localStorage.getItem('carrinho-temp');
+                    if (carrinhoTemp) {
+                        const produtos = JSON.parse(carrinhoTemp);
+
+                        produtos.forEach(produto => {
+                            const key = `${produto.produtoId}-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+                            state.items.push({
+                                key,
+                                produtoId: produto.produtoId,
+                                nome: produto.nome,
+                                sub: produto.subtitulo || '',
+                                img: produto.imagem || '',
+                                preco: parseFloat(produto.preco) || 0,
+                                qtd: parseInt(produto.quantidade) || 1
+                            });
+                        });
+
+                        localStorage.removeItem('carrinho-temp');
+
+                        if (produtos.length > 0) {
+                            const notification = document.createElement('div');
+                            notification.className = 'alert alert-success alert-dismissible fade show';
+                            notification.innerHTML = `
+                                <strong>Produtos adicionados!</strong> ${produtos.length} produto(s) foram carregados no seu carrinho.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            `;
+                            document.querySelector('.container').insertBefore(notification, document.querySelector('.cart-header'));
+
+                            setTimeout(() => {
+                                if (notification.parentNode) {
+                                    notification.remove();
+                                }
+                            }, 5000);
+                        }
+                    }
+                } catch (e) {
+                    console.warn('Erro ao carregar carrinho do localStorage:', e);
+                }
+            }
+
+            shippingSel?.addEventListener('change', recalcSummary);
+            usuarioSelect?.addEventListener('change', updateSubmitButtonState);
+
+            const form = $('cart-form');
+            form?.addEventListener('submit', () => {
+                hiddenInputs.innerHTML = '';
+                state.items.forEach((it, i) => {
+                    const p1 = document.createElement('input');
+                    p1.type = 'hidden';
+                    p1.name = `Itens[${i}].ProdutoId`;
+                    p1.value = it.produtoId;
+
+                    const p2 = document.createElement('input');
+                    p2.type = 'hidden';
+                    p2.name = `Itens[${i}].Quantidade`;
+                    p2.value = String(it.qtd);
+
+                    const p3 = document.createElement('input');
+                    p3.type = 'hidden';
+                    p3.name = `Itens[${i}].PrecoUnitario`;
+                    p3.value = String(Number(it.preco).toFixed(2));
+
+                    hiddenInputs.appendChild(p1);
+                    hiddenInputs.appendChild(p2);
+                    hiddenInputs.appendChild(p3);
+                });
+            });
+
+            document.addEventListener('DOMContentLoaded', () => {
+                carregarItensDoLocalStorage();
+                render();
+                atualizarContadorCarrinho();
+            });
+
+            // Função para atualizar contador no header (compartilhada entre páginas)
+            function atualizarContadorCarrinho() {
+                const carrinho = JSON.parse(localStorage.getItem('carrinho-temp') || '[]');
+                const totalItens = carrinho.reduce((total, item) => total + item.quantidade, 0);
+
+                document.querySelectorAll('.carrinho-count').forEach(el => {
+                    el.textContent = totalItens;
+                    el.style.display = totalItens > 0 ? 'inline' : 'none';
+                });
+            }
+
+            render();
+        })();
+    </script>
 }

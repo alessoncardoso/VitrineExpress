@@ -2,69 +2,100 @@
 @model VitrineExpress.Pages.Enderecos.DeleteModel
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Excluir endereço";
 }
 
-<h1>Delete</h1>
+<div class="container py-4">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <div>
+            <h1 class="h3 mb-1">Excluir endereço</h1>
+            <p class="text-muted mb-0">Confirme a exclusão do endereço selecionado. Esta ação não pode ser desfeita.</p>
+        </div>
+        <a asp-page="./Index" class="btn btn-outline-secondary">
+            Voltar para a lista
+        </a>
+    </div>
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Endereco</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Endereco.Rua)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Endereco.Rua)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Endereco.Numero)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Endereco.Numero)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Endereco.Bairro)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Endereco.Bairro)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Endereco.Cidade)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Endereco.Cidade)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Endereco.Estado)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Endereco.Estado)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Endereco.Cep)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Endereco.Cep)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Endereco.Cliente)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Endereco.Cliente.Id)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Endereco.Loja)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Endereco.Loja.Id)
-        </dd>
-    </dl>
-    
-    <form method="post">
+    <div class="alert alert-danger d-flex align-items-start gap-2" role="alert">
+        <div class="fw-semibold">Atenção:</div>
+        <div>Você está prestes a excluir este endereço. Verifique as informações abaixo antes de continuar.</div>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-transparent">
+            <h2 class="h5 mb-0">Resumo do endereço</h2>
+        </div>
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-5 col-sm-3 text-muted">@Html.DisplayNameFor(model => model.Endereco.Rua)</dt>
+                <dd class="col-7 col-sm-9">@Html.DisplayFor(model => model.Endereco.Rua)</dd>
+
+                <dt class="col-5 col-sm-3 text-muted">@Html.DisplayNameFor(model => model.Endereco.Numero)</dt>
+                <dd class="col-7 col-sm-9">@Html.DisplayFor(model => model.Endereco.Numero)</dd>
+
+                <dt class="col-5 col-sm-3 text-muted">@Html.DisplayNameFor(model => model.Endereco.Bairro)</dt>
+                <dd class="col-7 col-sm-9">@Html.DisplayFor(model => model.Endereco.Bairro)</dd>
+
+                <dt class="col-5 col-sm-3 text-muted">@Html.DisplayNameFor(model => model.Endereco.Cidade)</dt>
+                <dd class="col-7 col-sm-9">@Html.DisplayFor(model => model.Endereco.Cidade)</dd>
+
+                <dt class="col-5 col-sm-3 text-muted">@Html.DisplayNameFor(model => model.Endereco.Estado)</dt>
+                <dd class="col-7 col-sm-9">
+                    <span class="badge bg-secondary-subtle text-secondary-emphasis border border-secondary-subtle">
+                        @Html.DisplayFor(model => model.Endereco.Estado)
+                    </span>
+                </dd>
+
+                <dt class="col-5 col-sm-3 text-muted">@Html.DisplayNameFor(model => model.Endereco.Cep)</dt>
+                <dd class="col-7 col-sm-9">@Html.DisplayFor(model => model.Endereco.Cep)</dd>
+
+                <dt class="col-5 col-sm-3 text-muted">@Html.DisplayNameFor(model => model.Endereco.Usuario)</dt>
+                <dd class="col-7 col-sm-9">
+                    <span class="text-body-secondary">Usuario ID:</span>
+                    @Html.DisplayFor(model => model.Endereco.Usuario.Id)
+                </dd>
+
+                <dt class="col-5 col-sm-3 text-muted">@Html.DisplayNameFor(model => model.Endereco.Loja)</dt>
+                <dd class="col-7 col-sm-9">
+                    <span class="text-body-secondary">Loja ID:</span>
+                    @Html.DisplayFor(model => model.Endereco.Loja.Id)
+                </dd>
+            </dl>
+        </div>
+        <div class="card-footer bg-transparent d-flex flex-wrap gap-2 justify-content-end">
+            <a asp-page="./Index" class="btn btn-outline-secondary">Cancelar</a>
+
+            @* Botão que abre o modal de confirmação *@
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+                Excluir endereço
+            </button>
+        </div>
+    </div>
+
+    @* Formulário de exclusão com modal de confirmação *@
+    <form method="post" id="deleteForm" class="visually-hidden">
+        @Html.AntiForgeryToken()
         <input type="hidden" asp-for="Endereco.Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-page="./Index">Back to List</a>
+        <button type="submit" id="submitDeleteHidden"></button>
     </form>
+
+    @* Modal de confirmação *@
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="confirmDeleteLabel">Confirmar exclusão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    Tem certeza de que deseja excluir este endereço?
+                    <div class="mt-2 small text-muted">Esta ação é permanente.</div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" form="deleteForm" class="btn btn-danger">Sim, excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

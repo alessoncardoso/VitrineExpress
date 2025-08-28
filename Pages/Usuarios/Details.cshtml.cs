@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using VitrineExpress.Data;
 using VitrineExpress.Models;
 
 namespace VitrineExpress.Pages.Usuarios
@@ -28,15 +23,17 @@ namespace VitrineExpress.Pages.Usuarios
                 return NotFound();
             }
 
-            var usuario = await _context.Usuarios.FirstOrDefaultAsync(m => m.Id == id);
+            var usuario = await _context.Usuarios
+                .Include(u => u.Enderecos)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
             if (usuario == null)
             {
                 return NotFound();
             }
-            else
-            {
-                Usuario = usuario;
-            }
+
+            Usuario = usuario;
+
             return Page();
         }
     }

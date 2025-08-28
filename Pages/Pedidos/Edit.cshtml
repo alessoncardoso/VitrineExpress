@@ -2,59 +2,110 @@
 @model VitrineExpress.Pages.Pedidos.EditModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar pedido";
+    var p = Model.Pedido;
 }
 
-<h1>Edit</h1>
+<div class="container py-4">
+    <header class="page-header rounded-3 p-4 mb-4">
+        <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
+            <div>
+                <h1 class="h4 mb-1">Editar pedido @((p?.Id > 0) ? $"#{p.Id}" : "")</h1>
+                <p class="text-muted mb-0">Atualize os dados do pedido.</p>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <a asp-page="./Details" asp-route-id="@Model.Pedido?.Id" class="btn btn-outline-secondary">Cancelar</a>
+                <a asp-page="./Index" class="btn btn-outline-light border">Voltar para a lista</a>
+            </div>
+        </div>
+    </header>
 
-<h4>Pedido</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Pedido.Id" />
-            <div class="form-group">
-                <label asp-for="Pedido.DataPedido" class="control-label"></label>
-                <input asp-for="Pedido.DataPedido" class="form-control" />
-                <span asp-validation-for="Pedido.DataPedido" class="text-danger"></span>
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h2 class="h6 mb-0">Informações do pedido</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post" novalidate>
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden" asp-for="Pedido.Id" />
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="row g-3">
+                            <div class="col-12 col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Pedido.DataPedido" type="datetime-local" class="form-control" placeholder="Data do pedido" />
+                                    <label asp-for="Pedido.DataPedido"></label>
+                                </div>
+                                <span class="text-danger small" asp-validation-for="Pedido.DataPedido"></span>
+                                <div class="form-text">Selecione data e hora do pedido.</div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="input-group">
+                                    <span class="input-group-text">R$</span>
+                                    <div class="form-floating flex-grow-1">
+                                        <input asp-for="Pedido.ValorTotal" type="number" step="0.01" min="0" class="form-control" placeholder="0,00" />
+                                        <label asp-for="Pedido.ValorTotal"></label>
+                                    </div>
+                                </div>
+                                <span class="text-danger small" asp-validation-for="Pedido.ValorTotal"></span>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="form-floating">
+                                    <select asp-for="Pedido.UsuarioId" class="form-select" asp-items="ViewBag.UsuarioId">
+                                    </select>
+                                    <label asp-for="Pedido.UsuarioId"></label>
+                                </div>
+                                <span class="text-danger small" asp-validation-for="Pedido.UsuarioId"></span>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="form-floating">
+                                    <select asp-for="Pedido.LojaId" class="form-select" asp-items="ViewBag.LojaId">
+                                    </select>
+                                    <label asp-for="Pedido.LojaId"></label>
+                                </div>
+                                <span class="text-danger small" asp-validation-for="Pedido.LojaId"></span>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="form-floating">
+                                    <select asp-for="Pedido.StatusPedido" class="form-select">
+                                        <option value="">Selecione...</option>
+                                    </select>
+                                    <label asp-for="Pedido.StatusPedido"></label>
+                                </div>
+                                <span class="text-danger small" asp-validation-for="Pedido.StatusPedido"></span>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="form-floating">
+                                    <select asp-for="Pedido.TipoEntrega" class="form-select">
+                                        <option value="">Selecione...</option>
+                                    </select>
+                                    <label asp-for="Pedido.TipoEntrega"></label>
+                                </div>
+                                <span class="text-danger small" asp-validation-for="Pedido.TipoEntrega"></span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary">Salvar alterações</button>
+                            <a asp-page="./Details" asp-route-id="@Model.Pedido?.Id" class="btn btn-outline-secondary">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Pedido.ValorTotal" class="control-label"></label>
-                <input asp-for="Pedido.ValorTotal" class="form-control" />
-                <span asp-validation-for="Pedido.ValorTotal" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Pedido.ClienteId" class="control-label"></label>
-                <select asp-for="Pedido.ClienteId" class="form-control" asp-items="ViewBag.ClienteId"></select>
-                <span asp-validation-for="Pedido.ClienteId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Pedido.LojaId" class="control-label"></label>
-                <select asp-for="Pedido.LojaId" class="form-control" asp-items="ViewBag.LojaId"></select>
-                <span asp-validation-for="Pedido.LojaId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Pedido.StatusPedido" class="control-label"></label>
-                <select asp-for="Pedido.StatusPedido" class="form-control"></select>
-                <span asp-validation-for="Pedido.StatusPedido" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Pedido.TipoEntrega" class="control-label"></label>
-                <select asp-for="Pedido.TipoEntrega" class="form-control"></select>
-                <span asp-validation-for="Pedido.TipoEntrega" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-page="./Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

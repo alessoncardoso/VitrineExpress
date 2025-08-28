@@ -2,95 +2,175 @@
 @model VitrineExpress.Pages.Lojas.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Lojas";
+
+    var q = Request.Query["q"].ToString();
+    var hasItems = Model.Loja?.Any() == true;
+    var total = Model.Loja?.Count() ?? 0;
 }
 
-<h1>Index</h1>
+<div class="container py-4">
+    <header class="page-header rounded-3 p-4 mb-4">
+        <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
+            <div>
+                <h1 class="h4 mb-1">Lojas</h1>
+                <p class="text-muted mb-0">Gerencie as lojas cadastradas na plataforma.</p>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <span class="text-muted small">
+                    @if (hasItems)
+                    {
+                        <text>@total registro@(total == 1 ? "" : "s")</text>
+                    }
+                    else
+                    {
+                        <text>Nenhum registro</text>
+                    }
+                </span>
+                <a asp-page="Create" class="btn btn-primary">Criar nova</a>
+            </div>
+        </div>
+    </header>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Loja[0].Cnpj)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Loja[0].Nome)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Loja[0].ImagemUrl)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Loja[0].Descricao)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Loja[0].Telefone)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Loja[0].TaxaEntrega)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Loja[0].ValorMinimoPedido)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Loja[0].RetiradaDisponivel)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Loja[0].EntregaDisponivel)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Loja[0].Lojista)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Loja[0].StatusAtual)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Loja) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cnpj)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nome)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ImagemUrl)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descricao)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Telefone)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TaxaEntrega)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ValorMinimoPedido)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RetiradaDisponivel)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EntregaDisponivel)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Lojista.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StatusAtual)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    @if (!hasItems)
+    {
+        <div class="empty-state rounded-3 p-5 text-center">
+            <h2 class="h5 mb-2">Nenhuma loja encontrada</h2>
+            <p class="text-muted mb-4">Cadastre a primeira loja para começar.</p>
+            <a asp-page="Create" class="btn btn-primary">Criar loja</a>
+        </div>
+    }
+    else
+    {
+        @* Cards para mobile *@
+        <div class="d-md-none">
+            <div class="row g-3">
+                @foreach (var item in Model.Loja!)
+                {
+                    var img = string.IsNullOrWhiteSpace(item.ImagemUrl)
+                    ? "https://via.placeholder.com/800x500?text=Loja"
+                    : item.ImagemUrl;
+                    <div class="col-12">
+                        <div class="card store-card h-100">
+                            <img src="@img" alt="Imagem da loja @item.Nome" class="store-img" />
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start gap-3">
+                                    <div>
+                                        <h3 class="h6 mb-1">@item.Nome</h3>
+                                        <div class="text-muted small">CNPJ: @item.Cnpj</div>
+                                        <div class="small mt-1">
+                                            <span class="badge badge-outline me-1">Taxa: @string.Format("{0:C}", item.TaxaEntrega)</span>
+                                            <span class="badge badge-outline">Mínimo: @string.Format("{0:C}", item.ValorMinimoPedido)</span>
+                                        </div>
+                                    </div>
+                                    <div class="text-end">
+                                        @if (item.RetiradaDisponivel)
+                                        {
+                                            <span class="badge badge-outline me-1">Retirada</span>
+                                        }
+                                        @if (item.EntregaDisponivel)
+                                        {
+                                            <span class="badge badge-outline">Entrega</span>
+                                        }
+                                        @if (!string.IsNullOrWhiteSpace(item.StatusAtual.ToString()))
+                                        {
+                                            <div><span class="badge bg-light text-dark border mt-1">@item.StatusAtual</span></div>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="mt-2 text-muted small">
+                                    Telefone: @(!string.IsNullOrWhiteSpace(item.Telefone) ? item.Telefone : "—")
+                                </div>
+                                <div class="mt-3 d-flex flex-wrap gap-2">
+                                    <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Editar</a>
+                                    <a asp-page="./Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Detalhes</a>
+                                    <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Excluir</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        @* Tabela para md+ *@
+        <div class="table-responsive d-none d-md-block">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th style="width:1%;">Logo</th>
+                        <th>@Html.DisplayNameFor(m => m.Loja[0].Nome)</th>
+                        <th class="text-nowrap">@Html.DisplayNameFor(m => m.Loja[0].Cnpj)</th>
+                        <th class="text-nowrap">@Html.DisplayNameFor(m => m.Loja[0].Telefone)</th>
+                        <th class="text-nowrap">@Html.DisplayNameFor(m => m.Loja[0].TaxaEntrega)</th>
+                        <th class="text-nowrap">@Html.DisplayNameFor(m => m.Loja[0].ValorMinimoPedido)</th>
+                        <th class="text-nowrap">@Html.DisplayNameFor(m => m.Loja[0].RetiradaDisponivel)</th>
+                        <th class="text-nowrap">@Html.DisplayNameFor(m => m.Loja[0].EntregaDisponivel)</th>
+                        <th class="text-nowrap">@Html.DisplayNameFor(m => m.Loja[0].StatusAtual)</th>
+                        <th class="text-nowrap">@Html.DisplayNameFor(m => m.Loja[0].Usuario)</th>
+                        <th style="width:1%;" class="text-end">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Loja)
+                    {
+                        var thumb = string.IsNullOrWhiteSpace(item.ImagemUrl)
+                        ? "https://via.placeholder.com/112x112?text=Loja"
+                        : item.ImagemUrl;
+                        <tr>
+                            <td>
+                                <img src="@thumb" alt="Logo da loja @item.Nome" class="store-thumb" />
+                            </td>
+                            <td class="fw-medium">
+                                <div>@item.Nome</div>
+                                <div class="small text-muted text-truncate" style="max-width: 360px;">@item.Descricao</div>
+                            </td>
+                            <td>@item.Cnpj</td>
+                            <td>@(!string.IsNullOrWhiteSpace(item.Telefone) ? item.Telefone : "—")</td>
+                            <td>@string.Format("{0:C}", item.TaxaEntrega)</td>
+                            <td>@string.Format("{0:C}", item.ValorMinimoPedido)</td>
+                            <td>
+                                @if (item.RetiradaDisponivel)
+                                {
+                                    <span class="badge bg-light text-dark border">Sim</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-light text-dark border">Não</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.EntregaDisponivel)
+                                {
+                                    <span class="badge bg-light text-dark border">Sim</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-light text-dark border">Não</span>
+                                }
+                            </td>
+                            <td>
+                                @if (!string.IsNullOrWhiteSpace(item.StatusAtual.ToString()))
+                                {
+                                    <span class="badge badge-outline">@item.StatusAtual</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">—</span>
+                                }
+                            </td>
+                            <td>@item.Usuario?.Id</td>
+                            <td class="text-end">
+                                <div class="btn-group btn-group-sm" role="group" aria-label="Ações">
+                                    <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-outline-primary">Editar</a>
+                                    <a asp-page="./Details" asp-route-id="@item.Id" class="btn btn-outline-secondary">Detalhes</a>
+                                    <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-outline-danger">Excluir</a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

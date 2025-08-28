@@ -1,0 +1,165 @@
+﻿@page
+@model VitrineExpress.Pages.Account.Manage.DeleteModel
+@{
+    ViewData["Title"] = "Excluir Conta";
+}
+
+<div class="container py-4">
+    <!-- Header -->
+    <div class="row bg-light py-4 px-4 mb-4 rounded-3">
+        <div class="col-12">
+            <div class="d-flex align-items-center mb-2">
+                <div class="bg-danger bg-opacity-10 rounded-circle p-3 me-3">
+                    <i class="bi bi-person-x text-danger fs-4"></i>
+                </div>
+                <div>
+                    <h1 class="h3 mb-1 text-danger">@ViewData["Title"]</h1>
+                    <p class="text-muted mb-0">Gerenciar configurações da conta</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Sidebar de navegação -->
+        <div class="col-lg-3 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-light border-0">
+                    <h6 class="mb-0 fw-semibold">
+                        <i class="bi bi-person-gear me-2"></i>
+                        Gerenciar Conta
+                    </h6>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        <a asp-page="./Index" class="list-group-item list-group-item-action border-0 py-3">
+                            <i class="bi bi-person me-2 text-primary"></i>
+                            Perfil
+                        </a>
+                        <a asp-page="./Terms" class="list-group-item list-group-item-action border-0 py-3">
+                            <i class="bi bi-shield-check me-2 text-info"></i>
+                            Termos e Privacidade
+                        </a>
+                        <a asp-page="./ChangePassword" class="list-group-item list-group-item-action border-0 py-3">
+                            <i class="bi bi-key me-2 text-warning"></i>
+                            Alterar Senha
+                        </a>
+                        <a asp-page="./Delete" class="list-group-item list-group-item-action border-0 py-3 active bg-danger text-white">
+                            <i class="bi bi-person-x me-2"></i>
+                            Excluir Conta
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-lg-9">
+            <div class="row">
+                <!-- Danger Zone -->
+                <div class="col-lg-8">
+                    <div class="card border-danger shadow-sm">
+                        <div class="card-header bg-danger text-white">
+                            <h5 class="card-title mb-0">
+                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                Zona de Perigo
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert alert-danger border-0" role="alert">
+                                <h6 class="alert-heading">
+                                    <i class="bi bi-exclamation-triangle me-2"></i>
+                                    Atenção, @Model.NomeUsuario!
+                                </h6>
+                                <p class="mb-0">
+                                    Esta ação é <strong>permanente</strong> e não pode ser desfeita.
+                                    Você perderá acesso a todos os seus dados, histórico de pedidos e configurações.
+                                </p>
+                            </div>
+
+                            <form method="post">
+                                <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+
+                                <div class="form-floating mb-3">
+                                    <input asp-for="ConfirmationText" class="form-control" placeholder="Digite a confirmação" autocomplete="off" />
+                                    <label asp-for="ConfirmationText">Digite "eu quero excluir a conta"</label>
+                                    <span asp-validation-for="ConfirmationText" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-check mb-4">
+                                    <input class="form-check-input" type="checkbox" id="confirmDelete" required>
+                                    <label class="form-check-label" for="confirmDelete">
+                                        Eu entendo que esta ação é irreversível e aceito perder todos os meus dados
+                                    </label>
+                                </div>
+
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-danger" id="deleteButton" disabled>
+                                        <i class="bi bi-trash me-2"></i>
+                                        Sim, excluir minha conta permanentemente
+                                    </button>
+                                    <a asp-page="./Index" class="btn btn-outline-secondary px-4">
+                                        <i class="bi bi-x-circle me-2"></i>
+                                        Cancelar
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Painel informativo lateral -->
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <h6 class="card-title">
+                                <i class="bi bi-info-circle text-info me-2"></i>
+                                O que acontece quando você exclui sua conta?
+                            </h6>
+                            <ul class="list-unstyled small text-muted">
+                                <li class="mb-2">
+                                    <i class="bi bi-x-circle text-danger me-2"></i>
+                                    Todos os seus dados pessoais serão removidos
+                                </li>
+                                <li class="mb-2">
+                                    <i class="bi bi-x-circle text-danger me-2"></i>
+                                    Histórico de pedidos será perdido
+                                </li>
+                                <li class="mb-2">
+                                    <i class="bi bi-x-circle text-danger me-2"></i>
+                                    Configurações e preferências serão apagadas
+                                </li>
+                                <li class="mb-2">
+                                    <i class="bi bi-x-circle text-danger me-2"></i>
+                                    Não será possível recuperar a conta
+                                </li>
+                            </ul>
+                            <hr>
+                            <p class="small text-muted mb-0">
+                                <i class="bi bi-lightbulb text-warning me-2"></i>
+                                <strong>Dica:</strong> Se você está tendo problemas, considere entrar em contato com o suporte antes de excluir sua conta.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const checkbox = document.getElementById('confirmDelete');
+        const deleteButton = document.getElementById('deleteButton');
+        const confirmationText = document.querySelector('input[name="ConfirmationText"]');
+
+        function updateButtonState() {
+            const isChecked = checkbox.checked;
+            const hasCorrectText = confirmationText.value.toLowerCase() === 'eu quero excluir a conta';
+            deleteButton.disabled = !(isChecked && hasCorrectText);
+        }
+
+        checkbox.addEventListener('change', updateButtonState);
+        confirmationText.addEventListener('input', updateButtonState);
+    });
+</script>

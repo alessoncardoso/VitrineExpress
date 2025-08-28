@@ -9,7 +9,7 @@ namespace VitrineExpress.Pages.Account
         public async Task<IActionResult> OnGetAsync()
         {
             await HttpContext.SignOutAsync("VitrineCookie");
-            return RedirectToPage("/Account/Login");
+            return RedirectToPage("/Index");
         }
     }
 }

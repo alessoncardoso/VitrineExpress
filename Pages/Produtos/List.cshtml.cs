@@ -8,23 +8,23 @@ using Microsoft.EntityFrameworkCore;
 using VitrineExpress.Data;
 using VitrineExpress.Models;
 
-namespace VitrineExpress.Pages.Lojistas
+namespace VitrineExpress.Pages.Produtos
 {
-    public class IndexModel : PageModel
+    public class CatalogoModel : PageModel
     {
         private readonly VitrineExpress.Data.VitrineContext _context;
 
-        public IndexModel(VitrineExpress.Data.VitrineContext context)
+        public CatalogoModel(VitrineExpress.Data.VitrineContext context)
         {
             _context = context;
         }
 
-        public IList<Lojista> Lojista { get;set; } = default!;
+        public IList<Produto> Produto { get;set; } = default!;
 
         public async Task OnGetAsync()
         {
-            Lojista = await _context.Lojistas
-                .Include(l => l.Usuario).ToListAsync();
+            Produto = await _context.Produtos
+                .Include(p => p.Loja).ToListAsync();
         }
     }
 }

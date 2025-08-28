@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using VitrineExpress.Data;
+using VitrineExpress.Enums;
 using VitrineExpress.Models;
 
 namespace VitrineExpress.Pages.Lojas
@@ -21,6 +18,9 @@ namespace VitrineExpress.Pages.Lojas
 
         public Loja Loja { get; set; } = default!;
 
+        // Propriedade que define se o usuário atual pode gerenciar a loja e seus produtos
+        public bool CanManage { get; private set; }
+
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
@@ -28,15 +28,33 @@ namespace VitrineExpress.Pages.Lojas
                 return NotFound();
             }
 
-            var loja = await _context.Lojas.FirstOrDefaultAsync(m => m.Id == id);
+            // Busca a loja e já inclui (Include) todos os dados relacionados que vamos precisar na página
+            var loja = await _context.Lojas
+                .Include(l => l.Usuario)
+                .Include(l => l.Enderecos)
+                .Include(l => l.Produtos)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
             if (loja == null)
             {
                 return NotFound();
             }
-            else
+
+            Loja = loja;
+
+            // Lógica de permissão: ADMIN pode tudo, LOJISTA só pode gerenciar a própria loja.
+            CanManage = false;
+            if (User.Identity?.IsAuthenticated == true)
             {
-                Loja = loja;
+                var isAdmin = User.IsInRole(TipoUsuario.ADMIN.ToString());
+                var currentUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+                if (isAdmin || Loja.UsuarioId == currentUserId)
+                {
+                    CanManage = true;
+                }
             }
+
             return Page();
         }
     }

@@ -1,0 +1,324 @@
+﻿@page
+@model VitrineExpress.Pages.Produtos.CatalogoModel
+
+@{
+    ViewData["Title"] = "Catálogo de Produtos";
+    var hasItems = Model.Produto?.Any() == true;
+    var total = Model.Produto?.Count() ?? 0;
+}
+
+<div class="container py-4">
+    <!-- Header -->
+    <header class="text-center mb-5">
+        <div class="d-inline-flex align-items-center justify-content-center bg-primary bg-opacity-10 rounded-circle mb-3" style="width: 64px; height: 64px;">
+            <i class="bi bi-bag-heart text-primary fs-3"></i>
+        </div>
+        <h1 class="h2 mb-2">Nossos Produtos</h1>
+        <p class="text-muted mb-4">Descubra nossa seleção especial de produtos com qualidade garantida</p>
+
+        <!-- Barra de busca e filtros -->
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="searchInput"
+                                           placeholder="Buscar produtos..." value="@Request.Query["q"]">
+                                    <label for="searchInput"><i class="bi bi-search me-2"></i>Buscar produtos</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-floating">
+                                    <select class="form-select" id="deliveryFilter">
+                                        <option value="">Todos</option>
+                                        <option value="entrega">Entrega</option>
+                                        <option value="retirada">Retirada</option>
+                                    </select>
+                                    <label for="deliveryFilter"><i class="bi bi-truck me-2"></i>Tipo de serviço</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-floating">
+                                    <select class="form-select" id="sortFilter">
+                                        <option value="nome">Nome A-Z</option>
+                                        <option value="minimo">Menor preço</option>
+                                        <option value="maximo">Maior preço</option>
+                                        <option value="destaque">Em destaque</option>
+                                    </select>
+                                    <label for="sortFilter"><i class="bi bi-sort-down me-2"></i>Ordenar por</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    @if (!hasItems)
+    {
+        <!-- Estado vazio -->
+        <div class="text-center py-5">
+            <div class="d-inline-flex align-items-center justify-content-center bg-light rounded-circle mb-4" style="width: 80px; height: 80px;">
+                <i class="bi bi-box-seam text-muted" style="font-size: 3rem;"></i>
+            </div>
+            <h3 class="h4 mb-3">Nenhum produto encontrado</h3>
+            <p class="text-muted mb-4">No momento não há produtos cadastradas em nossa plataforma.</p>
+            <a href="/" class="btn btn-primary">Voltar ao início</a>
+        </div>
+    }
+    else
+    {
+        <!-- Contador de resultados -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <p class="text-muted mb-0">
+                <i class="bi bi-grid-3x3-gap me-1"></i>
+                @total produto@(total == 1 ? "" : "s") encontrado@(total == 1 ? "" : "s")
+            </p>
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    <i class="bi bi-sort-down me-1"></i>Ordenar
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="?ordem=nome">Nome A-Z</a></li>
+                    <li><a class="dropdown-item" href="?ordem=preco-menor">Menor preço</a></li>
+                    <li><a class="dropdown-item" href="?ordem=preco-maior">Maior preço</a></li>
+                    <li><a class="dropdown-item" href="?ordem=destaque">Em destaque</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Grid de produtos -->
+        <div class="row g-4">
+            @foreach (var item in Model.Produto!)
+            {
+                var img = string.IsNullOrWhiteSpace(item.ImagemUrl)
+                ? "/placeholder.svg?height=300&width=300"
+                : item.ImagemUrl;
+
+                <div class="col-sm-6 col-lg-4 col-xl-3">
+                    <div class="card produto-card h-100 border-0 shadow-sm">
+                        @if (item.EmDestaque)
+                        {
+                            <div class="position-absolute top-0 start-0 m-3 z-1">
+                                <span class="badge bg-warning text-dark">
+                                    <i class="bi bi-star-fill me-1"></i>Destaque
+                                </span>
+                            </div>
+                        }
+
+                        @if (!item.Disponivel)
+                        {
+                            <div class="position-absolute top-0 end-0 m-3 z-1">
+                                <span class="badge bg-secondary">Indisponível</span>
+                            </div>
+                        }
+
+                        <div class="position-relative overflow-hidden">
+                            <img src="@img" alt="@item.Nome" class="card-img-top produto-img"
+                                 style="height: 250px; object-fit: cover; transition: transform 0.3s ease;">
+
+                            <div class="position-absolute bottom-0 start-0 end-0 p-3 bg-gradient"
+                                 style="background: linear-gradient(transparent, rgba(0,0,0,0.7)); opacity: 0; transition: opacity 0.3s ease;">
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-light btn-sm flex-fill btn-adicionar-carrinho"
+                                            data-produto-id="@item.Id"
+                                            data-produto-nome="@item.Nome"
+                                            data-produto-preco="@item.Preco"
+                                            data-produto-imagem="@img"
+                                    @(!item.Disponivel || (item.ControlaEstoque && item.QuantidadeEstoque == 0) ? "disabled" : "")>
+                                        <i class="bi bi-cart-plus me-1"></i>Adicionar
+                                    </button>
+                                    <a href="/produtos/@item.Id" class="btn btn-outline-light btn-sm">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-body d-flex flex-column">
+                            <div class="mb-2">
+                                <span class="badge bg-light text-dark border small">@item.Categoria</span>
+                                @if (!string.IsNullOrEmpty(item.Subcategoria.ToString()))
+                                {
+                                    <span class="badge bg-light text-dark border small">@item.Subcategoria</span>
+                                }
+                            </div>
+
+                            <h5 class="card-title mb-2 fw-semibold">@item.Nome</h5>
+
+                            <p class="card-text text-muted small mb-3 flex-grow-1" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                @item.Descricao
+                            </p>
+
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="price-container">
+                                    <span class="h5 text-success fw-bold mb-0">@string.Format("{0:C}", item.Preco)</span>
+                                </div>
+
+                                @if (item.ControlaEstoque)
+                                {
+                                    <small class="text-muted">
+                                        @if (item.QuantidadeEstoque > 10)
+                                        {
+                                            <i class="bi bi-check-circle text-success me-1"></i>
+                                            <text>Em estoque</text>
+                                        }
+                                        else if (item.QuantidadeEstoque > 0)
+                                        {
+                                            <i class="bi bi-exclamation-triangle text-warning me-1"></i>
+                                            <text>Últimas unidades</text>
+                                        }
+                                        else
+                                        {
+                                            <i class="bi bi-x-circle text-danger me-1"></i>
+                                            <text>Sem estoque</text>
+                                        }
+                                    </small>
+                                }
+                            </div>
+
+                            <!-- Botões de ação -->
+                            <div class="d-grid gap-2">
+                                @if (item.Disponivel && (!item.ControlaEstoque || item.QuantidadeEstoque > 0))
+                                {
+                                    <button class="btn btn-primary btn-adicionar-carrinho"
+                                            data-produto-id="@item.Id"
+                                            data-produto-nome="@item.Nome"
+                                            data-produto-preco="@item.Preco"
+                                            data-produto-imagem="@img">
+                                        <i class="bi bi-cart-plus me-2"></i>Adicionar ao Carrinho
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-outline-secondary" disabled>
+                                        <i class="bi bi-x-circle me-2"></i>Indisponível
+                                    </button>
+                                }
+                                <a asp-page="/Produtos/Details"
+                                   asp-route-id="@item.Id" class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-eye me-1"></i>Ver Detalhes
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<!-- CSS personalizado para efeitos hover -->
+<style>
+    .produto-card:hover .card-img-top {
+        transform: scale(1.05);
+    }
+
+    .produto-card:hover .bg-gradient {
+        opacity: 1 !important;
+    }
+
+    .produto-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .produto-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+        }
+
+    .price-container {
+        position: relative;
+    }
+
+    .badge {
+        font-size: 0.75em;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        // Função para adicionar produto ao carrinho
+        function adicionarAoCarrinho(produtoId, nome, preco, imagem, subtitulo = '') {
+            const carrinhoAtual = JSON.parse(localStorage.getItem('carrinho-temp') || '[]');
+
+            // Verificar se produto já existe
+            const produtoExistente = carrinhoAtual.find(p => p.produtoId == produtoId);
+
+            if (produtoExistente) {
+                produtoExistente.quantidade += 1;
+            } else {
+                carrinhoAtual.push({
+                    produtoId: produtoId,
+                    nome: nome,
+                    preco: preco,
+                    imagem: imagem,
+                    subtitulo: subtitulo,
+                    quantidade: 1
+                });
+            }
+
+            localStorage.setItem('carrinho-temp', JSON.stringify(carrinhoAtual));
+
+            // Mostrar notificação
+            mostrarNotificacao('Produto adicionado ao carrinho!');
+
+            // Atualizar contador do carrinho
+            atualizarContadorCarrinho();
+        }
+
+        // Função para mostrar notificação
+        function mostrarNotificacao(mensagem) {
+            // Criar elemento de notificação
+            const notificacao = document.createElement('div');
+            notificacao.className = 'alert alert-success alert-dismissible fade show position-fixed';
+            notificacao.style.cssText = 'top: 20px; right: 20px; z-index: 1050; min-width: 300px;';
+            notificacao.innerHTML = `
+                <i class="bi bi-check-circle-fill me-2"></i>
+                ${mensagem}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+
+            document.body.appendChild(notificacao);
+
+            // Remover automaticamente após 3 segundos
+            setTimeout(() => {
+                if (notificacao.parentNode) {
+                    notificacao.remove();
+                }
+            }, 3000);
+        }
+
+        // Função para atualizar contador no header
+        function atualizarContadorCarrinho() {
+            const carrinho = JSON.parse(localStorage.getItem('carrinho-temp') || '[]');
+            const totalItens = carrinho.reduce((total, item) => total + item.quantidade, 0);
+
+            // Atualizar em todas as páginas
+            document.querySelectorAll('.carrinho-count').forEach(el => {
+                el.textContent = totalItens;
+                el.style.display = totalItens > 0 ? 'inline' : 'none';
+            });
+        }
+
+        // Adicionar evento aos botões de adicionar ao carrinho
+        document.querySelectorAll('.btn-adicionar-carrinho').forEach(button => {
+            button.addEventListener('click', function() {
+                const produtoId = this.dataset.produtoId;
+                const nome = this.dataset.produtoNome;
+                const preco = parseFloat(this.dataset.produtoPreco);
+                const imagem = this.dataset.produtoImagem;
+
+                adicionarAoCarrinho(produtoId, nome, preco, imagem);
+            });
+        });
+
+        // Chamar esta função quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            atualizarContadorCarrinho();
+        });
+    </script>
+}

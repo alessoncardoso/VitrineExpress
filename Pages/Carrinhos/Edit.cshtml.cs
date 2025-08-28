@@ -36,7 +36,7 @@ namespace VitrineExpress.Pages.Carrinhos
                 return NotFound();
             }
             Carrinho = carrinho;
-           ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Id");
+           ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Id");
             return Page();
         }
 

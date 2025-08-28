@@ -12,7 +12,7 @@ using VitrineExpress.Data;
 namespace VitrineExpress.Migrations
 {
     [DbContext(typeof(VitrineContext))]
-    [Migration("20250806002114_InitialCreate")]
+    [Migration("20250824035325_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -33,7 +33,10 @@ namespace VitrineExpress.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ClienteId")
+                    b.Property<bool>("Processado")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("UsuarioId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("ValorTotal")
@@ -41,31 +44,9 @@ namespace VitrineExpress.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClienteId");
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Carrinhos", (string)null);
-                });
-
-            modelBuilder.Entity("VitrineExpress.Models.Cliente", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Cpf")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UsuarioId")
-                        .IsUnique();
-
-                    b.ToTable("Clientes", (string)null);
                 });
 
             modelBuilder.Entity("VitrineExpress.Models.Endereco", b =>
@@ -77,34 +58,40 @@ namespace VitrineExpress.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Bairro")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Cep")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Cidade")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ClienteId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Estado")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("LojaId")
+                    b.Property<int?>("LojaId")
                         .HasColumnType("int");
 
                     b.Property<string>("Numero")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Rua")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("UsuarioId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClienteId");
-
                     b.HasIndex("LojaId");
+
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Enderecos", (string)null);
                 });
@@ -176,22 +163,25 @@ namespace VitrineExpress.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Cnpj")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(18)
+                        .HasColumnType("nvarchar(18)");
 
                     b.Property<string>("Descricao")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<bool>("EntregaDisponivel")
                         .HasColumnType("bit");
 
                     b.Property<string>("ImagemUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("LojistaId")
-                        .HasColumnType("int");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Nome")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<bool>("RetiradaDisponivel")
                         .HasColumnType("bit");
@@ -199,42 +189,24 @@ namespace VitrineExpress.Migrations
                     b.Property<int>("StatusAtual")
                         .HasColumnType("int");
 
-                    b.Property<double>("TaxaEntrega")
-                        .HasColumnType("float");
+                    b.Property<decimal?>("TaxaEntrega")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Telefone")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("ValorMinimoPedido")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LojistaId");
-
-                    b.ToTable("Lojas", (string)null);
-                });
-
-            modelBuilder.Entity("VitrineExpress.Models.Lojista", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Cnpj")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<int>("UsuarioId")
                         .HasColumnType("int");
 
+                    b.Property<decimal?>("ValorMinimoPedido")
+                        .HasColumnType("decimal(18,2)");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("UsuarioId")
-                        .IsUnique();
+                    b.HasIndex("UsuarioId");
 
-                    b.ToTable("Lojistas", (string)null);
+                    b.ToTable("Lojas", (string)null);
                 });
 
             modelBuilder.Entity("VitrineExpress.Models.Pedido", b =>
@@ -245,7 +217,7 @@ namespace VitrineExpress.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ClienteId")
+                    b.Property<int?>("CarrinhoId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DataPedido")
@@ -260,14 +232,21 @@ namespace VitrineExpress.Migrations
                     b.Property<int>("TipoEntrega")
                         .HasColumnType("int");
 
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("ValorTotal")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClienteId");
+                    b.HasIndex("CarrinhoId")
+                        .IsUnique()
+                        .HasFilter("[CarrinhoId] IS NOT NULL");
 
                     b.HasIndex("LojaId");
+
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Pedidos", (string)null);
                 });
@@ -287,7 +266,8 @@ namespace VitrineExpress.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Descricao")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<bool>("Disponivel")
                         .HasColumnType("bit");
@@ -296,13 +276,16 @@ namespace VitrineExpress.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("ImagemUrl")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<int>("LojaId")
                         .HasColumnType("int");
 
                     b.Property<string>("Nome")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<decimal>("Preco")
                         .HasColumnType("decimal(18,2)");
@@ -328,40 +311,50 @@ namespace VitrineExpress.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Cnpj")
+                        .HasMaxLength(18)
+                        .HasColumnType("nvarchar(18)");
+
+                    b.Property<string>("Cpf")
+                        .HasMaxLength(14)
+                        .HasColumnType("nvarchar(14)");
+
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Nome")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Senha")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Telefone")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("TipoUsuario")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("Usuarios", (string)null);
                 });
 
             modelBuilder.Entity("VitrineExpress.Models.Carrinho", b =>
                 {
-                    b.HasOne("VitrineExpress.Models.Cliente", "Cliente")
-                        .WithMany("Carrinhos")
-                        .HasForeignKey("ClienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Cliente");
-                });
-
-            modelBuilder.Entity("VitrineExpress.Models.Cliente", b =>
-                {
                     b.HasOne("VitrineExpress.Models.Usuario", "Usuario")
-                        .WithOne("Cliente")
-                        .HasForeignKey("VitrineExpress.Models.Cliente", "UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithMany("Carrinhos")
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Usuario");
@@ -369,21 +362,19 @@ namespace VitrineExpress.Migrations
 
             modelBuilder.Entity("VitrineExpress.Models.Endereco", b =>
                 {
-                    b.HasOne("VitrineExpress.Models.Cliente", "Cliente")
-                        .WithMany("Enderecos")
-                        .HasForeignKey("ClienteId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("VitrineExpress.Models.Loja", "Loja")
                         .WithMany("Enderecos")
                         .HasForeignKey("LojaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("Cliente");
+                    b.HasOne("VitrineExpress.Models.Usuario", "Usuario")
+                        .WithMany("Enderecos")
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Loja");
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("VitrineExpress.Models.ItemCarrinho", b =>
@@ -426,21 +417,10 @@ namespace VitrineExpress.Migrations
 
             modelBuilder.Entity("VitrineExpress.Models.Loja", b =>
                 {
-                    b.HasOne("VitrineExpress.Models.Lojista", "Lojista")
-                        .WithMany("Lojas")
-                        .HasForeignKey("LojistaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Lojista");
-                });
-
-            modelBuilder.Entity("VitrineExpress.Models.Lojista", b =>
-                {
                     b.HasOne("VitrineExpress.Models.Usuario", "Usuario")
-                        .WithOne("Lojista")
-                        .HasForeignKey("VitrineExpress.Models.Lojista", "UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithMany("Lojas")
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Usuario");
@@ -448,11 +428,10 @@ namespace VitrineExpress.Migrations
 
             modelBuilder.Entity("VitrineExpress.Models.Pedido", b =>
                 {
-                    b.HasOne("VitrineExpress.Models.Cliente", "Cliente")
-                        .WithMany("Pedidos")
-                        .HasForeignKey("ClienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("VitrineExpress.Models.Carrinho", "Carrinho")
+                        .WithOne("Pedido")
+                        .HasForeignKey("VitrineExpress.Models.Pedido", "CarrinhoId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("VitrineExpress.Models.Loja", "Loja")
                         .WithMany("Pedidos")
@@ -460,9 +439,17 @@ namespace VitrineExpress.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Cliente");
+                    b.HasOne("VitrineExpress.Models.Usuario", "Usuario")
+                        .WithMany("Pedidos")
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Carrinho");
 
                     b.Navigation("Loja");
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("VitrineExpress.Models.Produto", b =>
@@ -479,15 +466,8 @@ namespace VitrineExpress.Migrations
             modelBuilder.Entity("VitrineExpress.Models.Carrinho", b =>
                 {
                     b.Navigation("ItensCarrinho");
-                });
 
-            modelBuilder.Entity("VitrineExpress.Models.Cliente", b =>
-                {
-                    b.Navigation("Carrinhos");
-
-                    b.Navigation("Enderecos");
-
-                    b.Navigation("Pedidos");
+                    b.Navigation("Pedido");
                 });
 
             modelBuilder.Entity("VitrineExpress.Models.Loja", b =>
@@ -497,11 +477,6 @@ namespace VitrineExpress.Migrations
                     b.Navigation("Pedidos");
 
                     b.Navigation("Produtos");
-                });
-
-            modelBuilder.Entity("VitrineExpress.Models.Lojista", b =>
-                {
-                    b.Navigation("Lojas");
                 });
 
             modelBuilder.Entity("VitrineExpress.Models.Pedido", b =>
@@ -518,9 +493,13 @@ namespace VitrineExpress.Migrations
 
             modelBuilder.Entity("VitrineExpress.Models.Usuario", b =>
                 {
-                    b.Navigation("Cliente");
+                    b.Navigation("Carrinhos");
 
-                    b.Navigation("Lojista");
+                    b.Navigation("Enderecos");
+
+                    b.Navigation("Lojas");
+
+                    b.Navigation("Pedidos");
                 });
 #pragma warning restore 612, 618
         }

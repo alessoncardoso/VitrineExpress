@@ -2,84 +2,234 @@
 @model VitrineExpress.Pages.Produtos.DetailsModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalhes do produto";
+
+    var p = Model.Produto;
+    var img = string.IsNullOrWhiteSpace(p?.ImagemUrl)
+        ? "https://via.placeholder.com/1200x800?text=Produto"
+        : p!.ImagemUrl;
 }
 
-<h1>Details</h1>
+<div class="container py-4">
 
-<div>
-    <h4>Produto</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Produto.Nome)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Produto.Nome)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Produto.ImagemUrl)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Produto.ImagemUrl)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Produto.Descricao)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Produto.Descricao)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Produto.Preco)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Produto.Preco)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Produto.QuantidadeEstoque)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Produto.QuantidadeEstoque)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Produto.ControlaEstoque)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Produto.ControlaEstoque)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Produto.Disponivel)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Produto.Disponivel)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Produto.EmDestaque)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Produto.EmDestaque)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Produto.Loja)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Produto.Loja.Id)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Produto.Categoria)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Produto.Categoria)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Produto.Subcategoria)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Produto.Subcategoria)
-        </dd>
-    </dl>
+    @if (p is null)
+    {
+        <div class="empty-state rounded-3 p-5 text-center">
+            <h1 class="h5 mb-2">Produto não encontrado</h1>
+            <p class="text-muted mb-4">Não foi possível carregar as informações deste produto.</p>
+            <a asp-page="./Index" class="btn btn-outline-secondary">Voltar para a lista</a>
+        </div>
+    }
+    else
+    {
+        <header class="page-header rounded-3 p-4 mb-4">
+            <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
+                <div>
+                    <h1 class="h4 mb-1">@p.Nome</h1>
+                    <p class="mb-0 text-muted">Visualize os detalhes do produto e ações disponíveis.</p>
+                </div>
+                @if (User.IsInRole("LOJISTA"))
+                {
+                    <div class="d-flex flex-wrap gap-2">
+                        <a asp-page="./Edit" asp-route-id="@p.Id" class="btn btn-primary">Editar</a>
+                        <a asp-page="./Index" class="btn btn-outline-secondary">Voltar</a>
+                        <a asp-page="./Delete" asp-route-id="@p.Id" class="btn btn-outline-danger">Excluir</a>
+                    </div>
+                }
+                @if (User.IsInRole("CLIENTE"))
+                {
+                    @if (p.Disponivel && (!p.ControlaEstoque || p.QuantidadeEstoque > 0))
+                    {
+                        <button class="btn btn-primary btn-adicionar-carrinho"
+                                data-produto-id="@p.Id"
+                                data-produto-nome="@p.Nome"
+                                data-produto-preco="@p.Preco"
+                                data-produto-imagem="@img">
+                            <i class="bi bi-cart-plus me-2"></i>Adicionar ao Carrinho
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-outline-secondary" disabled>
+                            <i class="bi bi-x-circle me-2"></i>Indisponível
+                        </button>
+                    }
+                }
+            </div>
+        </header>
+
+        <div class="row g-4">
+            <div class="col-12 col-lg-6">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="ratio ratio-4x3 mb-3">
+                            <img src="@img" alt="Imagem do produto @p.Nome" class="product-img" />
+                        </div>
+                        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                            <div>
+                                <div class="price h4 mb-0">@string.Format("{0:C}", p.Preco)</div>
+                                <div class="text-muted small">Preço</div>
+                            </div>
+                            <div class="text-end">
+                                @if (p.Disponivel)
+                                {
+                                    <span class="badge bg-success">Disponível</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Indisponível</span>
+                                }
+                                @if (p.EmDestaque)
+                                {
+                                    <span class="badge bg-warning text-dark ms-1">Destaque</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-6">
+                <div class="card h-auto mb-4">
+                    <div class="card-header bg-white">
+                        <h2 class="h6 mb-0">Informações</h2>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex gap-3">
+                            <div class="info-key">Nome</div>
+                            <div class="info-value fw-medium">@p.Nome</div>
+                        </li>
+                        <li class="list-group-item d-flex gap-3">
+                            <div class="info-key">Loja</div>
+                            <div class="info-value">@p.Loja?.Id</div>
+                        </li>
+                        <li class="list-group-item d-flex gap-3">
+                            <div class="info-key">Categoria</div>
+                            <div class="info-value">
+                                @if (!string.IsNullOrWhiteSpace(p.Categoria.ToString()))
+                                {
+                                    <span class="badge badge-outline">@p.Categoria</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">—</span>
+                                }
+                            </div>
+                        </li>
+                        <li class="list-group-item d-flex gap-3">
+                            <div class="info-key">Subcategoria</div>
+                            <div class="info-value">
+                                @if (!string.IsNullOrWhiteSpace(p.Subcategoria.ToString()))
+                                {
+                                    <span class="badge badge-outline">@p.Subcategoria</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">—</span>
+                                }
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card h-auto">
+                    <div class="card-header bg-white">
+                        <h2 class="h6 mb-0">Descrição</h2>
+                    </div>
+                    <div class="card-body">
+                        @if (!string.IsNullOrWhiteSpace(p.Descricao))
+                        {
+                            <div style="white-space: pre-wrap;">@p.Descricao</div>
+                        }
+                        else
+                        {
+                            <div class="text-muted">Sem descrição.</div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 </div>
-<div>
-    <a asp-page="./Edit" asp-route-id="@Model.Produto.Id">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
-</div>
+@section Scripts {
+    <script>
+        // Função para adicionar produto ao carrinho
+        function adicionarAoCarrinho(produtoId, nome, preco, imagem, subtitulo = '') {
+            const carrinhoAtual = JSON.parse(localStorage.getItem('carrinho-temp') || '[]');
+
+            // Verificar se produto já existe
+            const produtoExistente = carrinhoAtual.find(p => p.produtoId == produtoId);
+
+            if (produtoExistente) {
+                produtoExistente.quantidade += 1;
+            } else {
+                carrinhoAtual.push({
+                    produtoId: produtoId,
+                    nome: nome,
+                    preco: preco,
+                    imagem: imagem,
+                    subtitulo: subtitulo,
+                    quantidade: 1
+                });
+            }
+
+            localStorage.setItem('carrinho-temp', JSON.stringify(carrinhoAtual));
+
+            // Mostrar notificação
+            mostrarNotificacao('Produto adicionado ao carrinho!');
+
+            // Atualizar contador do carrinho
+            atualizarContadorCarrinho();
+        }
+
+        // Função para mostrar notificação
+        function mostrarNotificacao(mensagem) {
+            // Criar elemento de notificação
+            const notificacao = document.createElement('div');
+            notificacao.className = 'alert alert-success alert-dismissible fade show position-fixed';
+            notificacao.style.cssText = 'top: 20px; right: 20px; z-index: 1050; min-width: 300px;';
+            notificacao.innerHTML = `
+                <i class="bi bi-check-circle-fill me-2"></i>
+                ${mensagem}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+
+            document.body.appendChild(notificacao);
+
+            // Remover automaticamente após 3 segundos
+            setTimeout(() => {
+                if (notificacao.parentNode) {
+                    notificacao.remove();
+                }
+            }, 3000);
+        }
+
+        // Função para atualizar contador no header
+        function atualizarContadorCarrinho() {
+            const carrinho = JSON.parse(localStorage.getItem('carrinho-temp') || '[]');
+            const totalItens = carrinho.reduce((total, item) => total + item.quantidade, 0);
+
+            // Atualizar em todas as páginas
+            document.querySelectorAll('.carrinho-count').forEach(el => {
+                el.textContent = totalItens;
+                el.style.display = totalItens > 0 ? 'inline' : 'none';
+            });
+        }
+
+        // Adicionar evento aos botões de adicionar ao carrinho
+        document.querySelectorAll('.btn-adicionar-carrinho').forEach(button => {
+            button.addEventListener('click', function() {
+                const produtoId = this.dataset.produtoId;
+                const nome = this.dataset.produtoNome;
+                const preco = parseFloat(this.dataset.produtoPreco);
+                const imagem = this.dataset.produtoImagem;
+
+                adicionarAoCarrinho(produtoId, nome, preco, imagem);
+            });
+        });
+
+        // Chamar esta função quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            atualizarContadorCarrinho();
+        });
+    </script>
+}

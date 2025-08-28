@@ -5,8 +5,8 @@
         PENDENTE,
         APROVADO,
         PREPARANDO,
-        PRONTO_PARA_RETIRADA,
-        EM_ROTA,
+        PRETIRADA,
+        ENVIADO,
         ENTREGUE,
         CANCELADO
     }

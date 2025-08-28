@@ -2,66 +2,89 @@
 @model VitrineExpress.Pages.Enderecos.DetailsModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalhes do endereço";
+    var e = Model.Endereco;
+    var enderecoCompleto = e is null ? "" : $"{e.Rua}, {e.Numero} - {e.Bairro}, {e.Cidade} - {e.Estado}, {e.Cep}";
+    var mapsQuery = System.Net.WebUtility.UrlEncode(enderecoCompleto ?? "");
 }
 
-<h1>Details</h1>
+<div class="container py-4">
+    <header class="d-flex align-items-center justify-content-between mb-3">
+        <div>
+            <h1 class="h3 mb-1">Detalhes do endereço</h1>
+            <p class="text-muted mb-0">Visualize as informações cadastradas para este endereço.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-page="./Index" class="btn btn-outline-secondary">Voltar</a>
+            <a asp-page="./Edit" asp-route-id="@Model.Endereco.Id" class="btn btn-primary">Editar</a>
+        </div>
+    </header>
 
-<div>
-    <h4>Endereco</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Endereco.Rua)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Endereco.Rua)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Endereco.Numero)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Endereco.Numero)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Endereco.Bairro)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Endereco.Bairro)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Endereco.Cidade)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Endereco.Cidade)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Endereco.Estado)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Endereco.Estado)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Endereco.Cep)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Endereco.Cep)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Endereco.Cliente)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Endereco.Cliente.Id)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Endereco.Loja)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Endereco.Loja.Id)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-page="./Edit" asp-route-id="@Model.Endereco.Id">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
+    @if (!string.IsNullOrWhiteSpace(enderecoCompleto))
+    {
+        <div class="alert alert-light border d-flex flex-wrap align-items-center justify-content-between gap-2" role="note">
+            <div class="small text-muted">
+                <span class="me-1">Endereço completo:</span>
+                <strong class="text-body">@enderecoCompleto</strong>
+            </div>
+            <a class="btn btn-sm btn-outline-primary"
+               href="https://www.google.com/maps/search/?api=1&query=@mapsQuery"
+               target="_blank" rel="noopener noreferrer">
+                Abrir no mapa
+            </a>
+        </div>
+    }
+
+    <main>
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-transparent">
+                <h2 class="h5 mb-0">Informações</h2>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-5 col-sm-3 text-muted">@Html.DisplayNameFor(m => m.Endereco.Rua)</dt>
+                    <dd class="col-7 col-sm-9">@Html.DisplayFor(m => m.Endereco.Rua)</dd>
+
+                    <dt class="col-5 col-sm-3 text-muted">@Html.DisplayNameFor(m => m.Endereco.Numero)</dt>
+                    <dd class="col-7 col-sm-9">@Html.DisplayFor(m => m.Endereco.Numero)</dd>
+
+                    <dt class="col-5 col-sm-3 text-muted">@Html.DisplayNameFor(m => m.Endereco.Bairro)</dt>
+                    <dd class="col-7 col-sm-9">@Html.DisplayFor(m => m.Endereco.Bairro)</dd>
+
+                    <dt class="col-5 col-sm-3 text-muted">@Html.DisplayNameFor(m => m.Endereco.Cidade)</dt>
+                    <dd class="col-7 col-sm-9">@Html.DisplayFor(m => m.Endereco.Cidade)</dd>
+
+                    <dt class="col-5 col-sm-3 text-muted">@Html.DisplayNameFor(m => m.Endereco.Estado)</dt>
+                    <dd class="col-7 col-sm-9">
+                        <span class="badge bg-light text-secondary border">
+                            @Html.DisplayFor(m => m.Endereco.Estado)
+                        </span>
+                    </dd>
+
+                    <dt class="col-5 col-sm-3 text-muted">@Html.DisplayNameFor(m => m.Endereco.Cep)</dt>
+                    <dd class="col-7 col-sm-9">
+                        <span class="badge bg-light text-secondary border">
+                            @Html.DisplayFor(m => m.Endereco.Cep)
+                        </span>
+                    </dd>
+
+                    <dt class="col-5 col-sm-3 text-muted">@Html.DisplayNameFor(m => m.Endereco.Usuario)</dt>
+                    <dd class="col-7 col-sm-9">
+                        <span class="text-body-secondary me-1">Usuario ID:</span>
+                        @Html.DisplayFor(m => m.Endereco.UsuarioId)
+                    </dd>
+
+                    <dt class="col-5 col-sm-3 text-muted">@Html.DisplayNameFor(m => m.Endereco.Loja)</dt>
+                    <dd class="col-7 col-sm-9">
+                        <span class="text-body-secondary me-1">Loja ID:</span>
+                        @Html.DisplayFor(m => m.Endereco.LojaId)
+                    </dd>
+                </dl>
+            </div>
+            <div class="card-footer bg-transparent d-flex flex-wrap gap-2 justify-content-end">
+                <a asp-page="./Index" class="btn btn-outline-secondary">Voltar</a>
+                <a asp-page="./Edit" asp-route-id="@Model.Endereco.Id" class="btn btn-primary">Editar</a>
+            </div>
+        </div>
+    </main>
 </div>

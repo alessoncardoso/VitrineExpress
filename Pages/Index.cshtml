@@ -1,10 +1,254 @@
 ﻿@page
-@model IndexModel
+@model VitrineExpress.Pages.IndexModel
 @{
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!-- Hero section -->
+<section class="bg-light py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-5 fw-bold text-dark mb-3">
+                    Bem-vindo ao VitrineExpress
+                </h1>
+                <p class="lead text-muted mb-4">
+                    Descubra as melhores lojas e produtos da sua região. Compre online e receba em casa ou retire na loja.
+                </p>
+                <div class="d-flex gap-2 flex-wrap">
+                    <a href="#lojas" class="btn btn-primary btn-lg">
+                        <i class="bi bi-store me-2"></i>
+                        Explorar Lojas
+                    </a>
+                    <a href="#produtos" class="btn btn-outline-secondary btn-lg">
+                        Ver Produtos
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-4 text-center">
+                <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 200px; height: 200px;">
+                    <i class="bi bi-cart text-primary" style="font-size: 4rem;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Seção de produtos -->
+<section id="produtos" class="bg-light py-2 my-5">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h2 class="h3 mb-1">
+                            Produtos
+                        </h2>
+                        <p class="text-muted mb-0">Os melhores produtos selecionados para você</p>
+                    </div>
+                    <a asp-page="/Produtos/List" class="link-dark text-decoration-none">
+                        ver mais
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        @if (!(Model.Produtos?.Any() ?? false))
+        {
+            <div class="text-center py-5">
+                <div class="mb-3">
+                    <i class="bi bi-box text-muted" style="font-size: 3rem;"></i>
+                </div>
+                <h4 class="text-muted">Nenhum produto cadastrado ainda</h4>
+                <p class="text-muted">Em breve teremos produtos incríveis para você!</p>
+            </div>
+        }
+        else
+        {
+            <div class="row g-4">
+                @foreach (var produto in Model.Produtos!)
+                {
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="card h-100 shadow-sm border-0 hover-card position-relative">
+                            @if (produto.EmDestaque)
+                            {
+                                <div class="position-absolute top-0 start-0 m-2 z-1">
+                                    <span class="badge bg-danger px-2 py-1">
+                                        <i class="-bi bi-fire me-1"></i>
+                                        -25%
+                                    </span>
+                                </div>
+                            }
+
+                            <div class="ratio ratio-1x1">
+                                <img src="@produto.ImagemUrl" alt="Imagem do produto @produto.Nome"
+                                     class="card-img-top" style="object-fit: cover;" />
+                            </div>
+
+                            <div class="card-body d-flex flex-column">
+                                <h3 class="h6 mb-2 fw-bold" title="@produto.Nome">@produto.Nome</h3>
+
+                                <div class="mb-3">
+                                    @if (produto.EmDestaque)
+                                    {
+                                        <div class="text-muted small text-decoration-line-through">
+                                            @string.Format("R$ {0:F2}", produto.Preco * 1.33m)
+                                        </div>
+                                    }
+                                    <div class="fw-bold text-success fs-5">
+                                        @string.Format("R$ {0:F2}", produto.Preco)
+                                    </div>
+                                </div>
+
+                                <div class="mt-auto">
+                                    @if (produto.Disponivel)
+                                    {
+                                        <div class="d-flex align-items-center gap-1 text-success small mb-2">
+                                            <i class="bi bi-check-circle"></i>
+                                            <span>Disponível</span>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary mb-2">
+                                            <i class="bi bi-x-circle me-1"></i>
+                                            Indisponível
+                                        </span>
+                                    }
+                                </div>
+
+                                <a asp-page="/Produtos/Details"
+                                   asp-route-id="@produto.Id"
+                                   class="stretched-link"
+                                   aria-label="Abrir detalhes de @produto.Nome"></a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</section>
+
+<!-- Seção de lojas -->
+<section id="lojas" class="container my-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <h2 class="h3 mb-1">
+                        Lojas
+                    </h2>
+                    <p class="text-muted mb-0">Conheça nossos estabelecimentos parceiros</p>
+                </div>
+                <a asp-page="/Lojas/List" class="link-dark text-decoration-none">
+                    ver mais
+                </a>
+            </div>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(Model.StatusMessage))
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>
+            @Model.StatusMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (!(Model.Lojas?.Any() ?? false))
+    {
+        <div class="text-center py-5">
+            <div class="mb-3">
+                <i class="bi bi-shop text-muted" style="font-size: 3rem;"></i>
+            </div>
+            <h4 class="text-muted">Nenhuma loja cadastrada ainda</h4>
+            <p class="text-muted">Em breve teremos lojas incríveis para você!</p>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var loja in Model.Lojas)
+            {
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm border-0 hover-card">
+                        <div class="position-relative">
+                            <div class="ratio ratio-16x9">
+                                <img src="@loja.ImagemUrl"
+                                     alt="Logo da loja @loja.Nome"
+                                     class="card-img-top"
+                                     style="object-fit: cover;" />
+                            </div>
+                            <!-- Status badge -->
+                            <div class="position-absolute top-0 end-0 m-3">
+                                @if (@loja.StatusAtual.ToString() == "ABERTA")
+                                {
+                                    <span class="badge bg-success px-3 py-2">
+                                        Aberta
+                                    </span>
+                                }
+                                @if (@loja.StatusAtual.ToString() == "FECHADA")
+                                {
+                                    <span class="badge bg-danger px-3 py-2">
+                                        Fechada
+                                    </span>
+                                }
+                                @if (@loja.StatusAtual.ToString() == "PAUSADA")
+                                {
+                                    <span class="badge bg-warning px-3 py-2">
+                                        Pausada
+                                    </span>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <h3 class="h5 mb-3 fw-bold">@loja.Nome</h3>
+
+                            <!-- Endereço -->
+                            <div class="d-flex align-items-start mb-3">
+                                <i class="bi bi-geo-alt text-primary me-2 mt-1"></i>
+                                <div class="text-muted small">
+                                    @{
+                                        var e = loja.Enderecos.FirstOrDefault();
+                                        var enderecoCompleto = e is null
+                                        ? "Endereço não informado"
+                                        : $"{e.Rua}, {e.Numero} - {e.Bairro}";
+                                    }
+                                    @enderecoCompleto
+                                </div>
+                            </div>
+
+                            <!-- Serviços disponíveis -->
+                            <div class="d-flex gap-2 mb-3">
+                                @if (loja.RetiradaDisponivel)
+                                {
+                                    <span class="badge bg-light text-dark border">
+                                        <i class="bi bi-clock me-1"></i>
+                                        Retirada
+                                    </span>
+                                }
+                                @if (loja.EntregaDisponivel)
+                                {
+                                    <span class="badge bg-light text-dark border">
+                                        <i class="bi bi-truck me-1"></i>
+                                        Entrega
+                                    </span>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="card-footer bg-transparent border-0 pt-0">
+                            <a asp-page="/Lojas/Details" asp-route-id="@loja.Id"
+                               class="btn btn-primary w-100">
+                                Visitar Loja
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</section>

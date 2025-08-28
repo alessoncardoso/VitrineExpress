@@ -7,26 +7,31 @@ namespace VitrineExpress.Models
     {
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "A data do pedido é obrigatória.")]
         public DateTime DataPedido { get; set; }
 
-        [Range(0.01, double.MaxValue)]
+        [Required(ErrorMessage = "O valor total é obrigatório.")]
+        [Range(typeof(decimal), "0,01", "9999999999", ErrorMessage = "O valor total deve ser maior que zero.")]
         public decimal ValorTotal { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "O cliente é obrigatório.")]
         public int UsuarioId { get; set; }
 
         public Usuario? Usuario { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "A loja é obrigatória.")]
         public int LojaId { get; set; }
 
         public Loja? Loja { get; set; }
 
-        [Required]
+        // NOVO: Referência ao Carrinho que originou este Pedido
+        public int? CarrinhoId { get; set; }
+        public Carrinho? Carrinho { get; set; }
+
+        [Required(ErrorMessage = "O status do pedido é obrigatório.")]
         public StatusPedido StatusPedido { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "O tipo de entrega é obrigatório.")]
         public TipoEntrega TipoEntrega { get; set; }
 
         public ICollection<ItemPedido> ItensPedido { get; set; } = new List<ItemPedido>();

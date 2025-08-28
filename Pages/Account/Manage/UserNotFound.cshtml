@@ -1,0 +1,76 @@
+@page
+@{
+    ViewData["Title"] = "Usuário Não Encontrado";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <!-- Card principal -->
+            <div class="card border-0 shadow-lg">
+                <div class="card-body text-center py-5">
+                    <!-- Ícone de erro -->
+                    <div class="bg-danger bg-opacity-10 rounded-circle p-4 mx-auto mb-4" style="width: 100px; height: 100px;">
+                        <i class="bi bi-person-x text-danger" style="font-size: 3rem;"></i>
+                    </div>
+                    
+                    <!-- Título e descrição -->
+                    <h1 class="h3 text-dark mb-3">Usuário Não Encontrado</h1>
+                    <p class="text-muted mb-4">
+                        Não foi possível encontrar as informações do seu usuário. 
+                        Isso pode ter acontecido por alguns motivos:
+                    </p>
+                    
+                    <!-- Lista de possíveis causas -->
+                    <div class="text-start mb-4">
+                        <ul class="list-unstyled">
+                            <li class="mb-2">
+                                <i class="bi bi-exclamation-circle text-warning me-2"></i>
+                                Sua sessão pode ter expirado
+                            </li>
+                            <li class="mb-2">
+                                <i class="bi bi-shield-exclamation text-info me-2"></i>
+                                Problemas temporários de autenticação
+                            </li>
+                            <li class="mb-2">
+                                <i class="bi bi-database-exclamation text-secondary me-2"></i>
+                                Erro temporário no sistema
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Botões de ação -->
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                        <a href="/" class="btn btn-primary px-4">
+                            <i class="bi bi-house me-2"></i>
+                            Voltar ao Início
+                        </a>
+                        <a href="/Account/Login" class="btn btn-outline-primary px-4">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>
+                            Fazer Login
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card de ajuda -->
+            <div class="card border-0 bg-light mt-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-start">
+                        <i class="bi bi-info-circle text-primary me-3 mt-1"></i>
+                        <div>
+                            <h6 class="mb-2">Precisa de Ajuda?</h6>
+                            <p class="text-muted small mb-2">
+                                Se o problema persistir, entre em contato com nosso suporte.
+                            </p>
+                            <a href="/Contact" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-headset me-1"></i>
+                                Contatar Suporte
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

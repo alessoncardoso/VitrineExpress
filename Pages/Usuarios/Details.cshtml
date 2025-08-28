@@ -1,43 +1,283 @@
-﻿@page
+﻿@* @page *@
+@* @model VitrineExpress.Pages.Usuarios.DetailsModel *@
+
+@* @{ *@
+@*     ViewData["Title"] = "Meu Perfil"; *@
+
+@*     var user = Model.Usuario; *@
+@*     var nome = user?.Nome ?? ""; *@
+@*     var partes = nome.Split(' ', System.StringSplitOptions.RemoveEmptyEntries); *@
+@*     var iniciais = partes.Length > 0 *@
+@*         ? string.Join("", partes.Take(2).Select(p => p[0])).ToUpperInvariant() *@
+@*         : "U"; *@
+@* } *@
+
+
+@* <div class="container py-4"> *@
+
+@*     @if (user is null) *@
+@*     { *@
+@*         <div class="empty-state rounded-3 p-5 text-center"> *@
+@*             <h1 class="h5 mb-2">Perfil não encontrado</h1> *@
+@*             <p class="text-muted mb-4">Não foi possível carregar suas informações.</p> *@
+@*             <a asp-page="./Index" class="btn btn-outline-secondary">Voltar</a> *@
+@*         </div> *@
+@*     } *@
+@*     else *@
+@*     { *@
+@*         <header class="profile-header rounded-3 p-4 mb-4"> *@
+@*             <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3"> *@
+@*                 <div class="d-flex align-items-center gap-3"> *@
+@*                     <div class="avatar" aria-hidden="true">@iniciais</div> *@
+@*                     <div> *@
+@*                         <h1 class="h4 mb-1">@user.Nome</h1> *@
+@*                         <div class="text-muted small"> *@
+@*                             <span class="me-3"> *@
+@*                                 <span class="visually-hidden">E-mail:</span> *@
+@*                                 @user.Email *@
+@*                             </span> *@
+@*                             <span> *@
+@*                                 <span class="visually-hidden">Telefone:</span> *@
+@*                                 @user.Telefone *@
+@*                             </span> *@
+@*                         </div> *@
+@*                     </div> *@
+@*                 </div> *@
+@*                 <div class="d-flex flex-wrap gap-2"> *@
+@*                     <a asp-page="./Edit" asp-route-id="@user.Id" class="btn btn-primary">Editar perfil</a> *@
+@*                     <a asp-page="./Index" class="btn btn-outline-secondary">Voltar</a> *@
+@*                 </div> *@
+@*             </div> *@
+@*         </header> *@
+
+@*         <div class="row g-4"> *@
+@*             <div class="col-12 col-lg-7"> *@
+@*                 <div class="card info-card h-100"> *@
+@*                     <div class="card-header bg-white"> *@
+@*                         <h2 class="h6 mb-0">Informações pessoais</h2> *@
+@*                     </div> *@
+@*                     <ul class="list-group list-group-flush"> *@
+@*                         <li class="list-group-item"> *@
+@*                             <div class="info-key">Nome</div> *@
+@*                             <div class="info-value fw-medium"> *@
+@*                                 @Html.DisplayFor(m => m.Usuario.Nome) *@
+@*                             </div> *@
+@*                         </li> *@
+@*                         <li class="list-group-item"> *@
+@*                             <div class="info-key">E-mail</div> *@
+@*                             <div class="info-value"> *@
+@*                                 @user.Email *@
+@*                             </div> *@
+@*                         </li> *@
+@*                         <li class="list-group-item"> *@
+@*                             <div class="info-key">Telefone</div> *@
+@*                             <div class="info-value"> *@
+@*                                 @Html.DisplayFor(m => m.Usuario.Telefone) *@
+@*                             </div> *@
+@*                         </li> *@
+@*                     </ul> *@
+@*                 </div> *@
+@*             </div> *@
+
+@*             <div class="col-12 col-lg-5"> *@
+@*                 <div class="card h-100"> *@
+@*                     <div class="card-header bg-white"> *@
+@*                         <h2 class="h6 mb-0">Segurança</h2> *@
+@*                     </div> *@
+@*                     <div class="card-body"> *@
+@*                         <div class="mb-3"> *@
+@*                             <div class="text-muted small mb-1">Senha</div> *@
+@*                             <div class="d-flex align-items-center justify-content-between"> *@
+@*                                 <div class="text-muted"> *@
+@*                                     •••••••• <span class="visually-hidden">A senha está protegida</span> *@
+@*                                 </div> *@
+@*                                 <a asp-page="./Edit" asp-route-id="@user.Id" class="btn btn-sm btn-outline-primary"> *@
+@*                                     Alterar senha *@
+@*                                 </a> *@
+@*                             </div> *@
+@*                             <div class="form-text">Por segurança, sua senha não é exibida.</div> *@
+@*                         </div> *@
+@*                         <hr /> *@
+@*                         <div class="d-grid d-sm-flex gap-2"> *@
+@*                             <a asp-page="./Edit" asp-route-id="@user.Id" class="btn btn-outline-secondary btn-sm">Atualizar dados</a> *@
+@*                             <a asp-page="./Index" class="btn btn-outline-light border btn-sm">Voltar para a lista</a> *@
+@*                         </div> *@
+@*                     </div> *@
+@*                 </div> *@
+@*             </div> *@
+@*         </div> *@
+@*     } *@
+@* </div> *@
+
+@page
 @model VitrineExpress.Pages.Usuarios.DetailsModel
+@using System.Linq
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Meu Perfil";
+    var user = Model.Usuario;
+    var nome = user?.Nome ?? "";
+    var partes = nome.Split(' ', System.StringSplitOptions.RemoveEmptyEntries);
+    var iniciais = partes.Length > 0
+        ? string.Join("", partes.Take(2).Select(p => p[0])).ToUpperInvariant()
+        : "U";
 }
 
-<h1>Details</h1>
+@section Styles {
+    <style>
+        /* Header com vibe “Quero Delivery”: tons quentes e visual clean */
+        .profile-header {
+            background: linear-gradient(135deg, #ffe8d0, #fff3e0);
+            border: 1px solid #f7e6d6;
+        }
 
-<div>
-    <h4>Usuario</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Usuario.Nome)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Usuario.Nome)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Usuario.Email)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Usuario.Email)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Usuario.Telefone)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Usuario.Telefone)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Usuario.Senha)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Usuario.Senha)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-page="./Edit" asp-route-id="@Model.Usuario.Id">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
+            .profile-header .btn-primary {
+                background: #ff6a00;
+                border-color: #ff6a00;
+            }
+
+                .profile-header .btn-primary:hover {
+                    background: #ff7f26;
+                    border-color: #ff7f26;
+                }
+
+        /* Avatar circular com destaque */
+        .avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #813a00;
+            background: radial-gradient(100% 100% at 50% 0%, #ffd7a8 0%, #ffc46e 100%);
+            border: 1px solid #ffb55a;
+        }
+
+        /* Estado vazio */
+        .empty-state {
+            background: #fff;
+            border: 1px dashed #e9ecef;
+        }
+
+        /* Cards de informação */
+        .info-card .list-group-item {
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            gap: 12px;
+            align-items: center;
+        }
+     
+
+        .info-key {
+            font-size: .875rem;
+            color: #6c757d;
+            white-space: nowrap;
+        }
+
+        .info-value {
+            color: #212529;
+        }
+
+        /* Text helpers */
+        .fw-medium {
+            font-weight: 600;
+        }
+    </style>
+}
+
+<div class="container py-4">
+    @if (user is null)
+    {
+        <div class="empty-state rounded-3 p-5 text-center">
+            <h1 class="h5 mb-2">Perfil não encontrado</h1>
+            <p class="text-muted mb-4">Não foi possível carregar suas informações.</p>
+            <a asp-page="./Index" class="btn btn-outline-secondary">Voltar</a>
+        </div>
+    }
+    else
+    {
+        <header class="profile-header rounded-3 p-4 mb-4">
+            <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="avatar" aria-hidden="true">@iniciais</div>
+                    <div>
+                        <h1 class="h4 mb-1">@user.Nome</h1>
+                        <div class="text-muted small">
+                            <span class="me-3">
+                                <span class="visually-hidden">E-mail:</span>
+                                @user.Email
+                            </span>
+                            <span>
+                                <span class="visually-hidden">Telefone:</span>
+                                @user.Telefone
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex flex-wrap gap-2">
+                    <a asp-page="./Edit" asp-route-id="@user.Id" class="btn btn-primary">Editar perfil</a>
+                    <a asp-page="./Index" class="btn btn-outline-secondary">Voltar</a>
+                </div>
+            </div>
+        </header>
+
+        <div class="row g-4">
+            <div class="col-12 col-lg-7">
+                <div class="card info-card h-100">
+                    <div class="card-header bg-white">
+                        <h2 class="h6 mb-0">Informações pessoais</h2>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <div class="info-key">Nome</div>
+                            <div class="info-value fw-medium">
+                                @Html.DisplayFor(m => m.Usuario.Nome)
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="info-key">E-mail</div>
+                            <div class="info-value">
+                                @user.Email
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="info-key">Telefone</div>
+                            <div class="info-value">
+                                @Html.DisplayFor(m => m.Usuario.Telefone)
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-5">
+                <div class="card h-100">
+                    <div class="card-header bg-white">
+                        <h2 class="h6 mb-0">Segurança</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <div class="text-muted small mb-1">Senha</div>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="text-muted">
+                                    •••••••• <span class="visually-hidden">A senha está protegida</span>
+                                </div>
+                                <a asp-page="./Edit" asp-route-id="@user.Id" class="btn btn-sm btn-outline-primary">
+                                    Alterar senha
+                                </a>
+                            </div>
+                            <div class="form-text">Por segurança, sua senha não é exibida.</div>
+                        </div>
+                        <hr />
+                        <div class="d-grid d-sm-flex gap-2">
+                            <a asp-page="./Edit" asp-route-id="@user.Id" class="btn btn-outline-secondary btn-sm">Atualizar dados</a>
+                            <a asp-page="./Index" class="btn btn-outline-light border btn-sm">Voltar para a lista</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 </div>
